@@ -1,72 +1,48 @@
 import requests
 from bs4 import BeautifulSoup
-import xml.etree.ElementTree as ET
-from urllib.parse import urlparse
-import re
-import os
+from feedgen.feed import FeedGenerator
+from urllib.parse import urljoin
+from datetime import datetime
 
-FEED_TITLE = "Feed RSS simulato"
-FEED_DESCRIPTION = "Feed generato automaticamente"
-FEED_LINK = "https://github.com/mdaniela62/rss-feeds"
+BASE_URL = "https://www.comune.altissimo.vi.it/home/novita.html"
 
-def slugify(url):
-    parsed = urlparse(url)
-    domain = parsed.netloc.replace('.', '_')
-    path = re.sub(r'[^a-zA-Z0-9]', '_', parsed.path)
-    return f"{domain}{path}.xml"
 
-def extract_articles(url):
-    try:
-        response = requests.get(url, timeout=20)
-        response.raise_for_status()
-    except Exception as e:
-        print(f"Errore nel recupero di {url}: {e}")
-        return []
+def fetch_articles():
+    response = requests.get(BASE_URL)
+    response.raise_for_status()
 
-    soup = BeautifulSoup(response.text, 'html.parser')
-    articles = []
+    soup = BeautifulSoup(response.content, 'html.parser')
 
-    for link in soup.find_all('a', href=True):
-        href = link['href']
-        text = link.get_text(strip=True)
-        if href and text and len(text) > 5:
-            if not href.startswith('http'):
-                href = url + href
-            articles.append({'title': text, 'link': href})
-    
-    return articles[:10]  # Limitiamo a 10 articoli per feed
+    items = []
 
-def create_rss(articles, site_url):
-    rss = ET.Element("rss", version="2.0")
-    channel = ET.SubElement(rss, "channel")
-    
-    ET.SubElement(channel, "title").text = FEED_TITLE
-    ET.SubElement(channel, "description").text = FEED_DESCRIPTION
-    ET.SubElement(channel, "link").text = site_url
+    for link in soup.select(".elenco_novita .media-body a"):
+        title = link.get_text(strip=True)
+        url = urljoin(BASE_URL, link.get("href"))
+        items.append({"title": title, "url": url})
 
-    for article in articles:
-        item = ET.SubElement(channel, "item")
-        ET.SubElement(item, "title").text = article['title']
-        ET.SubElement(item, "link").text = article['link']
+    return items
 
-    return ET.tostring(rss, encoding='utf-8', xml_declaration=True)
 
-def main():
-    if not os.path.exists("sites.txt"):
-        print("Il file sites.txt non esiste.")
-        return
+def generate_feed(items):
+    fg = FeedGenerator()
+    fg.title("Comune di Altissimo - Novità")
+    fg.link(href=BASE_URL, rel='alternate')
+    fg.description("Ultime novità dal sito ufficiale del Comune di Altissimo")
 
-    with open("sites.txt", "r") as f:
-        urls = [line.strip() for line in f if line.strip()]
+    pubdate = datetime.utcnow()
 
-    for url in urls:
-        print(f"Generazione feed per: {url}")
-        articles = extract_articles(url)
-        rss_content = create_rss(articles, url)
-        filename = slugify(url)
-        with open(filename, "wb") as f:
-            f.write(rss_content)
-        print(f"Feed generato: {filename}")
+    for item in items:
+        fe = fg.add_entry()
+        fe.title(item['title'])
+        fe.link(href=item['url'])
+        fe.pubDate(pubdate)
+
+    return fg.rss_str(pretty=True)
+
 
 if __name__ == "__main__":
-    main()
+    articles = fetch_articles()
+    rss_feed = generate_feed(articles)
+
+    with open("altissimo.xml", "wb") as f:
+        f.write(rss_feed)
