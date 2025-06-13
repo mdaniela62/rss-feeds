@@ -49,7 +49,6 @@ def generate_feed(site):
         soup = BeautifulSoup(response.content, "lxml")
 
         fg = FeedGenerator()
-        fg.load_extension('rss')
         fg.title(site["name"] + " - Novità")
         fg.link(href=site["url"], rel="alternate")
         fg.description(f"Ultime novità dal sito ufficiale del {site['name']}")
