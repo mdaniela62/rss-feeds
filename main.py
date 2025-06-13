@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 from datetime import datetime, timezone
+from email.utils import format_datetime
 
 # Mappatura mesi italiani per parsing manuale
 def parse_italian_date(date_str):
@@ -39,7 +40,7 @@ sites = [
     }
 ]
 
-# Funzione per generare il feed RSS con logging e gestione date
+# Funzione per generare il feed RSS compatibile con Inoreader
 def generate_feed(site):
     try:
         print(f"\n➡️ Inizio generazione feed per: {site['name']}")
@@ -48,6 +49,7 @@ def generate_feed(site):
         soup = BeautifulSoup(response.content, "lxml")
 
         fg = FeedGenerator()
+        fg.load_extension('rss')
         fg.title(site["name"] + " - Novità")
         fg.link(href=site["url"], rel="alternate")
         fg.description(f"Ultime novità dal sito ufficiale del {site['name']}")
@@ -69,12 +71,13 @@ def generate_feed(site):
                 fe = fg.add_entry()
                 fe.title(title_tag.get_text(strip=True))
                 fe.link(href=href)
+                fe.guid(href, permalink=True)
 
                 if date_tag:
                     date_text = date_tag.get_text(strip=True)
                     try:
                         pub_date = parse_italian_date(date_text)
-                        fe.published(pub_date)
+                        fe.pubDate(format_datetime(pub_date))
                     except Exception as date_err:
                         print(f"    ⚠️ Impossibile interpretare la data '{date_text}': {date_err}")
 
