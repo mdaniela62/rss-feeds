@@ -3,9 +3,21 @@ from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 from datetime import datetime
 import locale
+import calendar
 
-# Imposta la locale italiana per interpretare le date in italiano
-locale.setlocale(locale.LC_TIME, 'it_IT.UTF-8')
+# Mappatura mesi italiani per parsing manuale
+def parse_italian_date(date_str):
+    mesi = {
+        "gennaio": 1, "febbraio": 2, "marzo": 3, "aprile": 4, "maggio": 5, "giugno": 6,
+        "luglio": 7, "agosto": 8, "settembre": 9, "ottobre": 10, "novembre": 11, "dicembre": 12
+    }
+    parts = date_str.strip().split()
+    if len(parts) == 3:
+        giorno = int(parts[0])
+        mese = mesi.get(parts[1].lower(), 0)
+        anno = int(parts[2])
+        return datetime(anno, mese, giorno)
+    raise ValueError("Formato data non riconosciuto")
 
 # Lista dei siti da processare
 sites = [
@@ -64,7 +76,7 @@ def generate_feed(site):
                 if date_tag:
                     date_text = date_tag.get_text(strip=True)
                     try:
-                        pub_date = datetime.strptime(date_text, "%d %B %Y")
+                        pub_date = parse_italian_date(date_text)
                         fe.published(pub_date)
                     except Exception as date_err:
                         print(f"    ⚠️ Impossibile interpretare la data '{date_text}': {date_err}")
