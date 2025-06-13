@@ -17,10 +17,10 @@ sites = [
         "name": "Comune di Arzignano",
         "url": "https://www.comune.arzignano.vi.it/home/novita.html",
         "rss_file": "arzignano.xml",
-        "item_selector": "div.list-item",
-        "title_selector": "h2.list-title",
-        "link_selector": "a",
-        "date_selector": "div.list-date"
+        "item_selector": "div.card-wrapper",
+        "title_selector": "h3.cmp-list-card-img__body-title a",
+        "link_selector": "h3.cmp-list-card-img__body-title a",
+        "date_selector": "span.data"
     }
 ]
 
