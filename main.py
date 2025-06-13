@@ -46,7 +46,10 @@ def generate_feed(site):
             if title_tag and link_tag:
                 fe = fg.add_entry()
                 fe.title(title_tag.get_text(strip=True))
-                fe.link(href=link_tag.get("href"))
+                href = link_tag.get("href")
+                if href and not href.startswith("http"):
+                    href = requests.compat.urljoin(site["url"], href)
+                fe.link(href=href)
                 if date_tag:
                     fe.published(date_tag.get_text(strip=True))
 
