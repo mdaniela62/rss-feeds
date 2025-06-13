@@ -1,9 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
-from datetime import datetime
-import locale
-import calendar
+from datetime import datetime, timezone
 
 # Mappatura mesi italiani per parsing manuale
 def parse_italian_date(date_str):
@@ -16,7 +14,7 @@ def parse_italian_date(date_str):
         giorno = int(parts[0])
         mese = mesi.get(parts[1].lower(), 0)
         anno = int(parts[2])
-        return datetime(anno, mese, giorno)
+        return datetime(anno, mese, giorno, tzinfo=timezone.utc)
     raise ValueError("Formato data non riconosciuto")
 
 # Lista dei siti da processare
@@ -42,7 +40,6 @@ sites = [
 ]
 
 # Funzione per generare il feed RSS con logging e gestione date
-
 def generate_feed(site):
     try:
         print(f"\n➡️ Inizio generazione feed per: {site['name']}")
