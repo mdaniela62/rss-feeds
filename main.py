@@ -1,6 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
+from datetime import datetime
+import locale
+
+# Imposta la locale italiana per interpretare le date in italiano
+locale.setlocale(locale.LC_TIME, 'it_IT.UTF-8')
 
 # Lista dei siti da processare
 sites = [
@@ -24,7 +29,7 @@ sites = [
     }
 ]
 
-# Funzione per generare il feed RSS con logging
+# Funzione per generare il feed RSS con logging e gestione date
 
 def generate_feed(site):
     try:
@@ -55,8 +60,14 @@ def generate_feed(site):
                 fe = fg.add_entry()
                 fe.title(title_tag.get_text(strip=True))
                 fe.link(href=href)
+
                 if date_tag:
-                    fe.published(date_tag.get_text(strip=True))
+                    date_text = date_tag.get_text(strip=True)
+                    try:
+                        pub_date = datetime.strptime(date_text, "%d %B %Y")
+                        fe.published(pub_date)
+                    except Exception as date_err:
+                        print(f"    ⚠️ Impossibile interpretare la data '{date_text}': {date_err}")
 
         fg.rss_file(site["rss_file"])
         print(f"✅ Feed generato correttamente per {site['name']}")
