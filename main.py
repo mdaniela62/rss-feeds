@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 from datetime import datetime
 
-# URL della pagina novità del Comune di Altissimo
-URL = "https://www.comune.altissimo.vi.it/home/novita.html"
+# URL della pagina novità del Comune di Arzignano
+URL = "https://www.comune.arzignano.vi.it/home/novita.html"
 
 # Recupera la pagina
 response = requests.get(URL)
@@ -14,7 +14,7 @@ soup = BeautifulSoup(response.content, "lxml")
 
 # Generazione feed
 fg = FeedGenerator()
-fg.title("Comune di Altissimo - Novità")
+fg.title("Comune di Arzignano - Novità")
 fg.link(href=URL, rel='alternate')
 fg.description("Ultime novità dal sito ufficiale del Comune di Altissimo")
 fg.language('it')
@@ -26,7 +26,7 @@ for item in news_items:
     title = item.get_text(strip=True)
     link = item['href']
     if not link.startswith('http'):
-        link = "https://www.comune.altissimo.vi.it" + link
+        link = "https://www.comune.Arzignano.vi.it" + link
 
     fe = fg.add_entry()
     fe.title(title)
