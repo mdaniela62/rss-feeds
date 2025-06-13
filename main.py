@@ -2,57 +2,58 @@ import requests
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 
-# Configurazione dei siti da monitorare
-SITES = [
+# Lista dei siti da processare
+sites = [
     {
         "name": "Comune di Altissimo",
         "url": "https://www.comune.altissimo.vi.it/home/novita.html",
         "rss_file": "altissimo.xml",
+        "item_selector": "div.list-item",
+        "title_selector": "h2.list-title",
+        "link_selector": "a",
+        "date_selector": "div.list-date"
     },
     {
         "name": "Comune di Arzignano",
         "url": "https://www.comune.arzignano.vi.it/home/novita.html",
         "rss_file": "arzignano.xml",
+        "item_selector": "div.list-item",
+        "title_selector": "h2.list-title",
+        "link_selector": "a",
+        "date_selector": "div.list-date"
     }
 ]
 
-def extract_articles(url):
-    response = requests.get(url)
+# Funzione per generare il feed RSS
+def generate_feed(site):
+    response = requests.get(site["url"], timeout=10)
     response.raise_for_status()
     soup = BeautifulSoup(response.content, "lxml")
 
-    items = []
-
-    for link in soup.select(".elenco-novita .media-body a"):
-        title = link.get_text(strip=True)
-        href = link.get("href")
-        if href and not href.startswith("http"):
-            href = requests.compat.urljoin(url, href)
-        items.append({"title": title, "link": href})
-
-    return items
-
-
-def generate_feed(site_name, site_url, articles, output_file):
     fg = FeedGenerator()
-    fg.title(f"{site_name} - Novità")
-    fg.link(href=site_url, rel="alternate")
-    fg.description(f"Ultime novità dal sito ufficiale del {site_name}")
+    fg.title(site["name"] + " - Novità")
+    fg.link(href=site["url"], rel="alternate")
+    fg.description(f"Ultime novità dal sito ufficiale del {site['name']}")
 
-    for article in articles:
-        fe = fg.add_entry()
-        fe.title(article["title"])
-        fe.link(href=article["link"])
+    items = soup.select(site["item_selector"])
 
-    fg.rss_file(output_file)
+    for item in items:
+        title_tag = item.select_one(site["title_selector"])
+        link_tag = item.select_one(site["link_selector"])
+        date_tag = item.select_one(site["date_selector"])
+
+        if title_tag and link_tag:
+            fe = fg.add_entry()
+            fe.title(title_tag.get_text(strip=True))
+            fe.link(href=link_tag.get("href"))
+            if date_tag:
+                fe.published(date_tag.get_text(strip=True))
+
+    fg.rss_file(site["rss_file"])
 
 
-def main():
-    for site in SITES:
-        print(f"Generazione feed per: {site['name']}")
-        articles = extract_articles(site["url"])
-        generate_feed(site["name"], site["url"], articles, site["rss_file"])
+# Genera i feed per tutti i siti in lista
+for site in sites:
+    generate_feed(site)
 
-
-if __name__ == "__main__":
-    main()
+print("Feed generati correttamente.")
