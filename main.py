@@ -1,37 +1,58 @@
 import requests
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
-from datetime import datetime
 
-# URL della pagina novità del Comune di Arzignano
-URL = "https://www.comune.arzignano.vi.it/home/novita.html"
+# Configurazione dei siti da monitorare
+SITES = [
+    {
+        "name": "Comune di Altissimo",
+        "url": "https://www.comune.altissimo.vi.it/home/novita.html",
+        "rss_file": "altissimo.xml",
+    },
+    {
+        "name": "Comune di Arzignano",
+        "url": "https://www.comune.arzignano.vi.it/home/novita.html",
+        "rss_file": "arzignano.xml",
+    }
+]
 
-# Recupera la pagina
-response = requests.get(URL)
-response.raise_for_status()
+def extract_articles(url):
+    response = requests.get(url)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.content, "lxml")
 
-soup = BeautifulSoup(response.content, "lxml")
+    items = []
 
-# Generazione feed
-fg = FeedGenerator()
-fg.title("Comune di Arzignano - Novità")
-fg.link(href=URL, rel='alternate')
-fg.description("Ultime novità dal sito ufficiale del Comune di Arzignano")
-fg.language('it')
+    for link in soup.select(".elenco-novita .media-body a"):
+        title = link.get_text(strip=True)
+        href = link.get("href")
+        if href and not href.startswith("http"):
+            href = requests.compat.urljoin(url, href)
+        items.append({"title": title, "link": href})
 
-# Trova le notizie
-news_items = soup.select("div.news li a")
+    return items
 
-for item in news_items:
-    title = item.get_text(strip=True)
-    link = item['href']
-    if not link.startswith('http'):
-        link = "https://www.comune.arzignano.vi.it" + link
 
-    fe = fg.add_entry()
-    fe.title(title)
-    fe.link(href=link)
-    fe.pubDate(datetime.utcnow())  # Non c'è data nel sito ➔ mettiamo data attuale
+def generate_feed(site_name, site_url, articles, output_file):
+    fg = FeedGenerator()
+    fg.title(f"{site_name} - Novità")
+    fg.link(href=site_url, rel="alternate")
+    fg.description(f"Ultime novità dal sito ufficiale del {site_name}")
 
-# Salva il feed RSS in un file XML
-fg.rss_file("arzignano.xml")
+    for article in articles:
+        fe = fg.add_entry()
+        fe.title(article["title"])
+        fe.link(href=article["link"])
+
+    fg.rss_file(output_file)
+
+
+def main():
+    for site in SITES:
+        print(f"Generazione feed per: {site['name']}")
+        articles = extract_articles(site["url"])
+        generate_feed(site["name"], site["url"], articles, site["rss_file"])
+
+
+if __name__ == "__main__":
+    main()
