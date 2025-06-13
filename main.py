@@ -16,7 +16,7 @@ soup = BeautifulSoup(response.content, "lxml")
 fg = FeedGenerator()
 fg.title("Comune di Arzignano - Novità")
 fg.link(href=URL, rel='alternate')
-fg.description("Ultime novità dal sito ufficiale del Comune di Altissimo")
+fg.description("Ultime novità dal sito ufficiale del Comune di Arzignano")
 fg.language('it')
 
 # Trova le notizie
@@ -26,7 +26,7 @@ for item in news_items:
     title = item.get_text(strip=True)
     link = item['href']
     if not link.startswith('http'):
-        link = "https://www.comune.Arzignano.vi.it" + link
+        link = "https://www.comune.arzignano.vi.it" + link
 
     fe = fg.add_entry()
     fe.title(title)
@@ -34,4 +34,4 @@ for item in news_items:
     fe.pubDate(datetime.utcnow())  # Non c'è data nel sito ➔ mettiamo data attuale
 
 # Salva il feed RSS in un file XML
-fg.rss_file("altissimo.xml")
+fg.rss_file("arzignano.xml")
