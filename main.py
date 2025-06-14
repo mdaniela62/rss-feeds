@@ -60,6 +60,7 @@ def generate_feed(site):
             title_tag = item.select_one(site["title_selector"])
             link_tag = item.select_one(site["link_selector"])
             date_tag = item.select_one(site["date_selector"])
+            summary_tag = item.select_one("p")  # Proviamo a prendere un paragrafo come description
 
             if title_tag and link_tag:
                 href = link_tag.get("href")
@@ -71,6 +72,11 @@ def generate_feed(site):
                 fe.title(title_tag.get_text(strip=True))
                 fe.link(href=href)
                 fe.guid(href, permalink=True)
+
+                if summary_tag:
+                    fe.description(summary_tag.get_text(strip=True))
+                else:
+                    fe.description(title_tag.get_text(strip=True))
 
                 if date_tag:
                     date_text = date_tag.get_text(strip=True)
