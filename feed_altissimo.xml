@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>Comune di Altissimo - Novità</title>
+    <link>https://www.comune.altissimo.vi.it/home/novita.html</link>
+    <description>Ultime novità dal sito ufficiale del Comune di Altissimo</description>
+    <docs>http://www.rssboard.org/rss-specification</docs>
+    <generator>python-feedgen</generator>
+    <lastBuildDate>Tue, 17 Jun 2025 12:33:44 +0000</lastBuildDate>
+    <item>
+      <title>POR FESR 2014-2020.</title>
+      <link>https://www.comune.altissimo.vi.it/notizie/POR-FESR-2014-2020.html</link>
+      <description>Azione 2.2.1, 2.2.2, 2.2.3 - DGR 557 del 05/05/2020
+“Agire per la cittadinanza digitale”</description>
+      <guid isPermaLink="true">https://www.comune.altissimo.vi.it/notizie/POR-FESR-2014-2020.html</guid>
+      <pubDate>Mon, 29 Jan 2024 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Regolamento raccolta funghi</title>
+      <link>https://www.comune.altissimo.vi.it/notizie/raccolta-funghi.html</link>
+      <description>Norme regolamentari valide nel territorio dei comuni di Altissimo, Chiampo, Crespadoro, Nogarole Vicentino, San Pietro Mussolino.</description>
+      <guid isPermaLink="true">https://www.comune.altissimo.vi.it/notizie/raccolta-funghi.html</guid>
+      <pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Sportello Antiviolenza Ambito Ven_05</title>
+      <link>https://www.comune.altissimo.vi.it/notizie/Orari-sportello-antiviolenza.html</link>
+      <description>Nuovi orari di apertura</description>
+      <guid isPermaLink="true">https://www.comune.altissimo.vi.it/notizie/Orari-sportello-antiviolenza.html</guid>
+      <pubDate>Tue, 06 Aug 2024 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Attività di digitalizzazione, rilievo e ricerca perdite della rete acquedottistica.</title>
+      <link>https://www.comune.altissimo.vi.it/notizie/Contrilli-Acquedotto-Marzo-Dicembre-2025.html</link>
+      <description>Marzo-Dicembre 2025</description>
+      <guid isPermaLink="true">https://www.comune.altissimo.vi.it/notizie/Contrilli-Acquedotto-Marzo-Dicembre-2025.html</guid>
+      <pubDate>Fri, 04 Apr 2025 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Buono Scuola</title>
+      <link>https://www.comune.altissimo.vi.it/notizie/Buono-Scuola-a.s.-2024-2025.html</link>
+      <description>Contributo regionale - Buono Scuola
+Anno scolastico 2024/2025</description>
+      <guid isPermaLink="true">https://www.comune.altissimo.vi.it/notizie/Buono-Scuola-a.s.-2024-2025.html</guid>
+      <pubDate>Fri, 09 May 2025 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Apertura Uffici su appuntamento</title>
+      <link>https://www.comune.altissimo.vi.it/notizie/Apertura-Uffici-su-appuntamento.html</link>
+      <description>Tutti gli Uffici ricevono solo su appuntamento</description>
+      <guid isPermaLink="true">https://www.comune.altissimo.vi.it/notizie/Apertura-Uffici-su-appuntamento.html</guid>
+      <pubDate>Mon, 19 May 2025 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Campagna informativa Arbovirosi</title>
+      <link>https://www.comune.altissimo.vi.it/notizie/Arbovirosi-2025.html</link>
+      <description>Campagna di comunicazione regionale e Linee Operative regionali per la Sorveglianza Arbovirosi - 2025</description>
+      <guid isPermaLink="true">https://www.comune.altissimo.vi.it/notizie/Arbovirosi-2025.html</guid>
+      <pubDate>Mon, 26 May 2025 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Mi accogli? Mi affido!</title>
+      <link>https://www.comune.altissimo.vi.it/notizie/Affido0.html</link>
+      <description>Informativa sul tema dell'Affido Familiare</description>
+      <guid isPermaLink="true">https://www.comune.altissimo.vi.it/notizie/Affido0.html</guid>
+      <pubDate>Thu, 12 Jun 2025 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Apertura Uffici su appuntamento</title>
+      <link>https://www.comune.altissimo.vi.it/notizie/Apertura-Uffici-su-appuntamento.html</link>
+      <description>Tutti gli Uffici ricevono solo su appuntamento</description>
+      <guid isPermaLink="true">https://www.comune.altissimo.vi.it/notizie/Apertura-Uffici-su-appuntamento.html</guid>
+      <pubDate>Mon, 19 May 2025 00:00:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>
