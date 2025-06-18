@@ -2,8 +2,8 @@ name: Genera e aggiorna feed RSS
 
 on:
   schedule:
-    - cron: '0 6 * * *'  # Ogni giorno alle 6 del mattino UTC (8:00 italiane)
-    - cron: '0 11 * * *' # Ogni giorno alle 11 UTC (13:00 italiane)
+    - cron: '0 6 * * *'  # Ogni giorno alle 6:00 UTC (8:00 italiane)
+    - cron: '0 11 * * *' # Ogni giorno alle 11:00 UTC (13:00 italiane)
   workflow_dispatch:  # Permette avvio manuale
 
 jobs:
@@ -20,16 +20,16 @@ jobs:
           python-version: '3.x'
 
       - name: Installa dipendenze
-        run: pip install requests beautifulsoup4 lxml feedgen
+        run: pip install -r requirements.txt
 
-      - name: Lista file per verifica
+      - name: Lista file repository
         run: ls -la
 
       - name: Esegui generazione feed (Altissimo)
-        run: python ./Altissimo.py || echo "⚠️ Errore durante generazione Altissimo, proseguo"
+        run: python Altissimo.py || echo "⚠️ Errore durante generazione Altissimo, proseguo"
 
       - name: Esegui generazione feed (Malo)
-        run: python ./Malo.py || echo "⚠️ Errore durante generazione Malo, proseguo"
+        run: python Malo.py || echo "⚠️ Errore durante generazione Malo, proseguo"
 
       - name: Commit e push aggiornamenti
         run: |
