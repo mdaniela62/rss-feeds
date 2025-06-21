@@ -8,6 +8,13 @@ URL = "https://www.comune.breganze.vi.it/home.html"
 
 TIMEOUT = 10
 
+# Parole chiave da escludere (servizi, sezioni, ecc.)
+ESCLUDI_TITOLI = [
+    "Servizi",
+    "Numero di emergenza",
+    "Albo pretorio"
+]
+
 print("➡️ Inizio generazione feed per Comune di Breganze")
 
 try:
@@ -31,11 +38,17 @@ try:
         if not link_tag or not title_tag:
             continue
 
+        title = title_tag.get_text(strip=True)
+
+        # Filtra titoli non desiderati
+        if any(keyword.lower() in title.lower() for keyword in ESCLUDI_TITOLI):
+            print(f"⏭️ Escluso: {title}")
+            continue
+
         link = link_tag.get("href")
         if not link.startswith("http"):
             link = "https://www.comune.breganze.vi.it" + link
 
-        title = title_tag.get_text(strip=True)
         pub_date = datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
 
         fe = fg.add_entry()
