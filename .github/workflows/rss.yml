@@ -37,6 +37,9 @@ jobs:
       - name: Esegui generazione feed (Barbarano)
         run: python Barbarano.py || echo "⚠️ Errore durante generazione Barbarano, proseguo"
 
+      - name: Esegui generazione feed (Barbarano)
+        run: python Barbarano.py || echo "⚠️ Errore durante generazione Barbarano, proseguo"
+      
       - name: Commit e push aggiornamenti
         run: |
           git config --global user.name "github-actions"
