@@ -39,6 +39,9 @@ jobs:
 
       - name: Esegui generazione feed (Breganze)
         run: python Breganze.py || echo "⚠️ Errore durante generazione Breganze, proseguo"
+
+      - name: Esegui generazione feed (Tezze)
+        run: python Tezze.py || echo "⚠️ Errore durante generazione Tezze, proseguo"
       
       - name: Commit e push aggiornamenti
         run: |
