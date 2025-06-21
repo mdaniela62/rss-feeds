@@ -34,6 +34,9 @@ jobs:
       - name: Esegui generazione feed (Arzignano)
         run: python Arzignano.py || echo "⚠️ Errore durante generazione Arzignano, proseguo"
 
+      - name: Esegui generazione feed (Barbarano)
+        run: python Arzignano.py || echo "⚠️ Errore durante generazione Barbarano, proseguo"
+
       - name: Commit e push aggiornamenti
         run: |
           git config --global user.name "github-actions"
