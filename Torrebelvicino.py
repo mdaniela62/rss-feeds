@@ -5,7 +5,6 @@ from datetime import datetime
 
 # URL della pagina Novità del Comune di Torrebelvicino
 URL = "https://www.comune.torrebelvicino.vi.it/Novita"
-
 TIMEOUT = 10
 
 # Parole chiave da escludere (titoli generici)
@@ -18,9 +17,9 @@ try:
     response.raise_for_status()
     soup = BeautifulSoup(response.content, "lxml")
 
-    # Selettore CSS per le notizie
-    items = soup.select("div.card-wrapper")
-    print(f"🔎 Trovati {len(items)} elementi con selector 'div.card-wrapper'")
+    # Selettore CSS corretto per le notizie
+    items = soup.select("div.cmp-list-card-img__body")
+    print(f"🔎 Trovati {len(items)} elementi con selector 'div.cmp-list-card-img__body'")
 
     fg = FeedGenerator()
     fg.title("Comune di Torrebelvicino - Novità")
@@ -28,8 +27,8 @@ try:
     fg.description("Ultime novità dal sito ufficiale del Comune di Torrebelvicino")
 
     for item in items:
-        link_tag = item.select_one("a.text-decoration-none")
-        title_tag = item.select_one("h3")
+        link_tag = item.select_one("h3 a")
+        title_tag = item.select_one("h3 a")
 
         if not link_tag or not title_tag:
             continue
