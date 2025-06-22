@@ -3,14 +3,14 @@ from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 from datetime import datetime
 
-# URL della pagina Novità del Comune di Torrebelvicino
-URL = "https://www.comune.torrebelvicino.vi.it/Novita"
+# URL della pagina Novità del Comune di Velodastico
+URL = "https://www.comune.velodastico.vi.it/Novita"
 TIMEOUT = 10
 
 # Parole chiave da escludere (titoli generici)
 ESCLUDI_TITOLI = ["Comunicati", "Notizie", "Avvisi"]
 
-print("➡️ Inizio generazione feed per Comune di Torrebelvicino")
+print("➡️ Inizio generazione feed per Comune di Velodastico")
 
 try:
     response = requests.get(URL, timeout=TIMEOUT)
@@ -22,9 +22,9 @@ try:
     print(f"🔎 Trovati {len(items)} elementi <h3>")
 
     fg = FeedGenerator()
-    fg.title("Comune di Torrebelvicino - Novità")
+    fg.title("Novità / Homepage - Comune di Velo d'Astico")
     fg.link(href=URL, rel="alternate")
-    fg.description("Ultime novità dal sito ufficiale del Comune di Torrebelvicino")
+    fg.description("Avvisi, comunicati stampa e notizie più importanti sempre aggiornate, della città")
 
     for h3 in items:
         title = h3.get_text(strip=True)
@@ -40,7 +40,7 @@ try:
 
         link = link_tag.get("href")
         if not link.startswith("http"):
-            link = "https://www.comune.torrebelvicino.vi.it" + link
+            link = "https://www.comune.velodastico.vi.it" + link
 
         pub_date = datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
 
@@ -52,8 +52,8 @@ try:
 
         print(f"✅ Aggiunto articolo: {title} → {link}")
 
-    fg.rss_file("feed_torrebelvicino.xml")
-    print("✅ Feed generato correttamente per Comune di Torrebelvicino")
+    fg.rss_file("feed_velodastico.xml")
+    print("✅ Feed generato correttamente per Comune di Velodastico")
 
 except Exception as e:
-    print(f"❌ Errore durante la generazione del feed per Comune di Torrebelvicino: {e}")
+    print(f"❌ Errore durante la generazione del feed per Comune di Velodastico: {e}")
