@@ -42,6 +42,9 @@ jobs:
 
       - name: Esegui generazione feed (Tezze)
         run: python Tezze.py || echo "⚠️ Errore durante generazione Tezze, proseguo"
+
+      - name: Esegui generazione feed (Tezze)
+        run: python Velo.py || echo "⚠️ Errore durante generazione Velo d'Astico, proseguo"
       
       - name: Commit e push aggiornamenti
         run: |
