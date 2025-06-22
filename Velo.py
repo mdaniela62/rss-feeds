@@ -17,27 +17,25 @@ try:
     response.raise_for_status()
     soup = BeautifulSoup(response.content, "lxml")
 
-    # Selettore CSS corretto per le notizie
-    items = soup.select("div.cmp-list-card-img__body")
-    print(f"🔎 Trovati {len(items)} elementi con selector 'div.cmp-list-card-img__body'")
+    # Utilizzo tag h3 per ricerca notizie
+    items = soup.find_all("h3")
+    print(f"🔎 Trovati {len(items)} elementi <h3>")
 
     fg = FeedGenerator()
     fg.title("Comune di Torrebelvicino - Novità")
     fg.link(href=URL, rel="alternate")
     fg.description("Ultime novità dal sito ufficiale del Comune di Torrebelvicino")
 
-    for item in items:
-        link_tag = item.select_one("h3 a")
-        title_tag = item.select_one("h3 a")
-
-        if not link_tag or not title_tag:
-            continue
-
-        title = title_tag.get_text(strip=True)
+    for h3 in items:
+        title = h3.get_text(strip=True)
 
         # Filtra titoli non desiderati
         if any(keyword.lower() == title.lower() for keyword in ESCLUDI_TITOLI):
             print(f"⏭️ Escluso: {title}")
+            continue
+
+        link_tag = h3.find("a")
+        if not link_tag or not link_tag.get("href"):
             continue
 
         link = link_tag.get("href")
