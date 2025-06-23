@@ -48,7 +48,10 @@ jobs:
 
       - name: Esegui generazione feed (Torrebelvicino)
         run: python Torrebelvicino.py || echo "⚠️ Errore durante generazione Torrebelvicino, proseguo"
-      
+
+      - name: Esegui generazione feed (Schiavon)
+        run: python Schiavon.py || echo "⚠️ Errore durante generazione Schiavon, proseguo"
+            
       - name: Commit e push aggiornamenti
         run: |
           git config --global user.name "github-actions"
