@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 from datetime import datetime
 
-# URL della home page del Comune di Velo d'Astico
-URL = "https://www.comune.velodastico.vi.it/home.html"
+# URL corretta della home page del Comune di Velo d'Astico
+URL = "https://www.comune.velodastico.vi.it/"
 TIMEOUT = 10
 
 print("➡️ Inizio generazione feed per Comune di Velo d'Astico (da Home)")
