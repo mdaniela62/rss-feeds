@@ -17,7 +17,7 @@ try:
     response.raise_for_status()
     soup = BeautifulSoup(response.content, "lxml")
 
-    # Selettore CSS corretto per le notizie
+    # Nuovo selettore CSS corretto per le notizie
     items = soup.select("div.card.cmp-list-card-img")
     print(f"🔎 Trovati {len(items)} elementi con selector 'div.card.cmp-list-card-img'")
 
