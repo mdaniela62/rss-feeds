@@ -3,39 +3,41 @@ from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 from datetime import datetime
 
-# URL della pagina Novità del Comune di Velodastico
+# URL della pagina Novità del Comune di Velo d'Astico
 URL = "https://www.comune.velodastico.vi.it/Novita"
 TIMEOUT = 10
 
 # Parole chiave da escludere (titoli generici)
 ESCLUDI_TITOLI = ["Comunicati", "Notizie", "Avvisi"]
 
-print("➡️ Inizio generazione feed per Comune di Velodastico")
+print("➡️ Inizio generazione feed per Comune di Velo d'Astico")
 
 try:
     response = requests.get(URL, timeout=TIMEOUT)
     response.raise_for_status()
     soup = BeautifulSoup(response.content, "lxml")
 
-    # Utilizzo tag h3 per ricerca notizie
-    items = soup.find_all("h3")
-    print(f"🔎 Trovati {len(items)} elementi <h3>")
+    # Selettore CSS corretto per le notizie
+    items = soup.select("div.card.cmp-list-card-img")
+    print(f"🔎 Trovati {len(items)} elementi con selector 'div.card.cmp-list-card-img'")
 
     fg = FeedGenerator()
-    fg.title("Novità / Homepage - Comune di Velo d'Astico")
+    fg.title("Comune di Velo d'Astico - Novità")
     fg.link(href=URL, rel="alternate")
-    fg.description("Avvisi, comunicati stampa e notizie più importanti sempre aggiornate, della città")
+    fg.description("Ultime novità dal sito ufficiale del Comune di Velo d'Astico")
 
-    for h3 in items:
-        title = h3.get_text(strip=True)
+    for item in items:
+        link_tag = item.select_one("h3 a")
+        title_tag = item.select_one("h3 a")
+
+        if not link_tag or not title_tag:
+            continue
+
+        title = title_tag.get_text(strip=True)
 
         # Filtra titoli non desiderati
         if any(keyword.lower() == title.lower() for keyword in ESCLUDI_TITOLI):
             print(f"⏭️ Escluso: {title}")
-            continue
-
-        link_tag = h3.find("a")
-        if not link_tag or not link_tag.get("href"):
             continue
 
         link = link_tag.get("href")
@@ -52,8 +54,8 @@ try:
 
         print(f"✅ Aggiunto articolo: {title} → {link}")
 
-    fg.rss_file("feed_velodastico.xml")
-    print("✅ Feed generato correttamente per Comune di Velodastico")
+    fg.rss_file("feed_velo.xml")
+    print("✅ Feed generato correttamente per Comune di Velo d'Astico")
 
 except Exception as e:
-    print(f"❌ Errore durante la generazione del feed per Comune di Velodastico: {e}")
+    print(f"❌ Errore durante la generazione del feed per Comune di Velo d'Astico: {e}")
