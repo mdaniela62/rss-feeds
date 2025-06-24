@@ -54,6 +54,6 @@ genera_feed(
     nome_comune="Comune di Gambellara",
     url_base="https://www.comune.gambellara.vi.it/home/novita",
     url="https://www.comune.gambellara.vi.it/home/novita",
-    selector="div.cmp-list-card-img__body",
+    selector="div.card-wrapped",
     base_href="https://www.comune.gambellara.vi.it"
 )
