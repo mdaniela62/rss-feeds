@@ -51,6 +51,15 @@ jobs:
 
       - name: Esegui generazione feed (Schiavon)
         run: python Schiavon.py || echo "⚠️ Errore durante generazione Schiavon, proseguo"
+
+      - name: Esegui generazione feed (Cartigliano)
+        run: python Cartigliano.py || echo "⚠️ Errore durante generazione Cartigliano, proseguo"
+
+      - name: Esegui generazione feed (Gambellara)
+        run: python Gambellara.py || echo "⚠️ Errore durante generazione Gambellara, proseguo"
+
+      - name: Esegui generazione feed (Monteviale)
+        run: python Monteviale.py || echo "⚠️ Errore durante generazione Monteviale, proseguo"
             
       - name: Commit e push aggiornamenti
         run: |
