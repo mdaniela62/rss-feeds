@@ -49,7 +49,6 @@ def genera_feed(nome_comune, url_base, url, selector, base_href):
         print(f"❌ Errore durante la generazione del feed per {nome_comune}: {e}")
 
 
-
 # Comune di Monteviale
 genera_feed(
     nome_comune="Comune di Monteviale",
