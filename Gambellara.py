@@ -49,7 +49,6 @@ def genera_feed(nome_comune, url_base, url, selector, base_href):
         print(f"❌ Errore durante la generazione del feed per {nome_comune}: {e}")
 
 
-
 # Comune di Gambellara
 genera_feed(
     nome_comune="Comune di Gambellara",
@@ -58,4 +57,3 @@ genera_feed(
     selector="div.cmp-list-card-img__body",
     base_href="https://www.comune.gambellara.vi.it"
 )
-
