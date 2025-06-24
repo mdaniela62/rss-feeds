@@ -15,8 +15,8 @@ try:
     soup = BeautifulSoup(response.content, "lxml")
 
     # Selettore CSS corretto per le notizie nella home page
-    items = soup.select("div.card.cmp-list-card-img")
-    print(f"🔎 Trovati {len(items)} elementi con selector 'div.card.cmp-list-card-img'")
+    items = soup.select("div.data-object_id")
+    print(f"🔎 Trovati {len(items)} elementi con selector 'div.data-object_id'")
 
     fg = FeedGenerator()
     fg.title("Comune di Velo d'Astico - Novità (Home)")
