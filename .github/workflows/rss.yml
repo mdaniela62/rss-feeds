@@ -52,9 +52,8 @@ jobs:
       - name: Esegui generazione feed (Schiavon)
         run: python Schiavon.py || echo "⚠️ Errore durante generazione Schiavon, proseguo"
 
-      - name: Cartigliano Feed
-        run: python Cartigliano.py || echo "⚠️ Cartigliano error"
-
+      - name: Esegui generazione feed (Cartigliano)
+        run: python Cartigliano.py || echo "⚠️ Errore durante generazione Cartigliano, proseguo"
 
       - name: Esegui generazione feed (Gambellara)
         run: python Gambellara.py || echo "⚠️ Errore durante generazione Gambellara, proseguo"
