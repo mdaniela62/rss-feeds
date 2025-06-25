@@ -27,7 +27,7 @@ jobs:
       - name: Genera e pubblica feed per Gambellara
         run: python Gambellara_Playwright.py
       - name: Upload screenshot per debug
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
            name: screenshot-gambellara
            path: screenshot.png
