@@ -25,4 +25,4 @@ jobs:
           playwright install chromium
 
       - name: Genera feed per Comune di Gambellara
-        run: python Velo_Home_Feed.py
+        run: python Gambellara.py
