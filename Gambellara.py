@@ -55,6 +55,6 @@ def genera_feed_gambellara():
 
 
 if __name__ == "__main__":
-    genera_feed_gambellara()""
+    genera_feed_gambellara()
 
 
