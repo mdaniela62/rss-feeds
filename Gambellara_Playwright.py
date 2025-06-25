@@ -16,6 +16,8 @@ def genera_feed_gambellara():
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
             page.goto("https://www.comune.gambellara.vi.it/home/novita", timeout=20000)
+            page.wait_for_timeout(3000)  # aspetta 3 secondi
+            page.screenshot(path="screenshot.png")
             content = page.content()
             browser.close()
 
