@@ -61,4 +61,4 @@ genera_feed(
     url="https://www.comune.monteviale.vi.it/",
     selector="div.card.cmp-list-card-img",
     base_href="https://www.comune.monteviale.vi.it"
-)"
+)
