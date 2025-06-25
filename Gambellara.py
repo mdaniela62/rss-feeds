@@ -1,40 +1,41 @@
-import requests
+""
+# Nuovo script Playwright per Gambellara (usa GitHub Actions)
+
+from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 from datetime import datetime
 
-def genera_feed(nome_comune, url_base, url, selector, base_href):
-    print(f"➡️ Inizio generazione feed per {nome_comune}")
+def genera_feed_gambellara():
+    print("➡️ Inizio generazione feed per Comune di Gambellara (con Playwright)")
 
     try:
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.content, "lxml")
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True)
+            page = browser.new_page()
+            page.goto("https://www.comune.gambellara.vi.it/home/novita", timeout=20000)
+            content = page.content()
+            browser.close()
 
-        # DEBUG: salva la pagina HTML per ispezione locale
-        with open(f"debug_{nome_comune.lower().replace(' ', '_')}.html", "w", encoding="utf-8") as f:
-            f.write(soup.prettify())
-
-        items = soup.select(selector)
-        if not items:
-            print(f"⚠️ Nessun elemento trovato con '{selector}', provo fallback su tutti i tag <a>")
-            items = soup.find_all("a")
-
-        print(f"🔎 Trovati {len(items)} elementi per {nome_comune}")
+        soup = BeautifulSoup(content, "lxml")
+        items = soup.select("div.cmp-list-card-img__body")
+        print(f"🔎 Trovati {len(items)} elementi con selector 'div.cmp-list-card-img__body'")
 
         fg = FeedGenerator()
-        fg.title(f"{nome_comune} - Novità")
-        fg.link(href=url_base, rel="alternate")
-        fg.description(f"Ultime novità dal sito ufficiale del {nome_comune}")
+        fg.title("Comune di Gambellara - Novità")
+        fg.link(href="https://www.comune.gambellara.vi.it/home/novita", rel="alternate")
+        fg.description("Ultime novità dal sito ufficiale del Comune di Gambellara")
 
         for item in items:
-            title = item.get_text(strip=True)
-            link = item.get("href")
-            if not title or not link or link.startswith("#"):
+            a_tag = item.select_one("a")
+            title = a_tag.get_text(strip=True) if a_tag else ""
+            link = a_tag.get("href") if a_tag else None
+
+            if not title or not link:
                 continue
 
             if not link.startswith("http"):
-                link = base_href.rstrip("/") + link
+                link = "https://www.comune.gambellara.vi.it" + link
 
             pub_date = datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
 
@@ -46,21 +47,14 @@ def genera_feed(nome_comune, url_base, url, selector, base_href):
 
             print(f"✅ Aggiunto articolo: {title} → {link}")
 
-        filename = f"feed_{nome_comune.lower().replace(' ', '_')}.xml"
-        fg.rss_file(filename)
-        print(f"✅ Feed generato correttamente per {nome_comune} → {filename}")
+        fg.rss_file("feed_gambellara.xml")
+        print("✅ Feed generato correttamente per Comune di Gambellara → feed_gambellara.xml")
 
     except Exception as e:
-        print(f"❌ Errore durante la generazione del feed per {nome_comune}: {e}")
+        print(f"❌ Errore durante la generazione del feed per Comune di Gambellara: {e}")
 
 
-# Comune di Gambellara
-genera_feed(
-    nome_comune="Comune di Gambellara",
-    url_base="https://www.comune.gambellara.vi.it/home/novita",
-    url="https://www.comune.gambellara.vi.it/home/novita",
-    selector="div.cmp-list-card-img__body",
-    base_href="https://www.comune.gambellara.vi.it"
-)
+if __name__ == "__main__":
+    genera_feed_gambellara()""
 
 
