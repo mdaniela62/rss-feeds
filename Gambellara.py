@@ -1,10 +1,12 @@
 ""
-# Nuovo script Playwright per Gambellara (usa GitHub Actions)
+# Nuovo script Playwright per Gambellara (usa GitHub Actions, salvataggio su GitHub)
 
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 from datetime import datetime
+import os
+import subprocess
 
 def genera_feed_gambellara():
     print("➡️ Inizio generazione feed per Comune di Gambellara (con Playwright)")
@@ -50,11 +52,15 @@ def genera_feed_gambellara():
         fg.rss_file("feed_gambellara.xml")
         print("✅ Feed generato correttamente per Comune di Gambellara → feed_gambellara.xml")
 
+        # Commit automatico su GitHub
+        subprocess.run(["git", "config", "--global", "user.name", "github-actions"])
+        subprocess.run(["git", "config", "--global", "user.email", "github-actions@github.com"])
+        subprocess.run(["git", "add", "feed_gambellara.xml"])
+        subprocess.run(["git", "commit", "-m", "Aggiornamento automatico feed Gambellara"])
+        subprocess.run(["git", "push"])
+
     except Exception as e:
         print(f"❌ Errore durante la generazione del feed per Comune di Gambellara: {e}")
 
-
 if __name__ == "__main__":
     genera_feed_gambellara()
-
-
