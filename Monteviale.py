@@ -1,4 +1,4 @@
-import requests
+""import requests
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 from datetime import datetime
@@ -11,8 +11,16 @@ def genera_feed(nome_comune, url_base, url, selector, base_href):
         response.raise_for_status()
         soup = BeautifulSoup(response.content, "lxml")
 
+        # DEBUG: salva la pagina HTML per ispezione locale
+        with open(f"debug_{nome_comune.lower().replace(' ', '_')}.html", "w", encoding="utf-8") as f:
+            f.write(soup.prettify())
+
         items = soup.select(selector)
-        print(f"🔎 Trovati {len(items)} elementi con selector '{selector}'")
+        if not items:
+            print(f"⚠️ Nessun elemento trovato con '{selector}', provo fallback su tutti i tag <a>")
+            items = soup.find_all("a")
+
+        print(f"🔎 Trovati {len(items)} elementi per {nome_comune}")
 
         fg = FeedGenerator()
         fg.title(f"{nome_comune} - Novità")
@@ -20,16 +28,13 @@ def genera_feed(nome_comune, url_base, url, selector, base_href):
         fg.description(f"Ultime novità dal sito ufficiale del {nome_comune}")
 
         for item in items:
-            link_tag = item.select_one("a")
-            title_tag = item.select_one("a")
-
-            if not link_tag or not title_tag:
+            title = item.get_text(strip=True)
+            link = item.get("href")
+            if not title or not link or link.startswith("#"):
                 continue
 
-            title = title_tag.get_text(strip=True)
-            link = link_tag.get("href")
             if not link.startswith("http"):
-                link = base_href + link
+                link = base_href.rstrip("/") + link
 
             pub_date = datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
 
@@ -56,4 +61,4 @@ genera_feed(
     url="https://www.comune.monteviale.vi.it/",
     selector="div.card.cmp-list-card-img",
     base_href="https://www.comune.monteviale.vi.it"
-)
+)"
