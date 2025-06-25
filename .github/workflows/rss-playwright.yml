@@ -2,8 +2,8 @@ name: RSS feed con Playwright
 
 on:
   schedule:
-    - cron: '0 7,13 * * *'  # Esecuzioni automatiche: ore 7 e 13 (italiane)
-  workflow_dispatch:        # Attivabile anche manualmente
+    - cron: '0 7,13 * * *'  # Esecuzioni alle 07:00 e 13:00 ora italiana
+  workflow_dispatch:
 
 jobs:
   gambellara-playwright:
@@ -18,11 +18,11 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Installa dipendenze
+      - name: Installa Playwright e dipendenze
         run: |
           pip install -r requirements.txt
           pip install playwright
           playwright install chromium
 
-      - name: Genera feed per Comune di Gambellara
-        run: python Gambellara.py
+      - name: Genera e pubblica feed per Gambellara
+        run: python Gambellara_Playwright.py
