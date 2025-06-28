@@ -12,14 +12,14 @@ def genera_feed_gambellara():
 
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=False)  # Browser visibile
+            browser = p.chromium.launch(headless=True)  # Browser visibile
             context = browser.new_context(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36")
             page = context.new_page()
             page.goto("https://www.comune.gambellara.vi.it/home/novita", timeout=20000)
             page.wait_for_timeout(3000)
             content = page.content()
             browser.close()
-
+            
         soup = BeautifulSoup(content, "lxml")
         items = soup.select("div.cmp-list-card-img__body")
         print(f"🔎 Trovati {len(items)} elementi con selector 'div.cmp-list-card-img__body'")
