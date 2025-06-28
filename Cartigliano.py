@@ -41,7 +41,7 @@ try:
         fe.id(link); fe.title(title); fe.link(href=link); fe.pubDate(pub_date)
         print(f"✅ Aggiunto: {title} – {pub_date}")
 
-    fg.rss_file("feed_cartigliano.xml")
+    fg.rss_file("cartigliano.xml")
     print("✅ Feed cartigliano.xml creato con successo")
 
 except Exception as e:
