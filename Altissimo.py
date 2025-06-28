@@ -1,45 +1,52 @@
-name: Genera e aggiorna feed RSS
+from bs4 import BeautifulSoup
+from feedgen.feed import FeedGenerator
+from datetime import datetime
+import requests
 
-on:
-  schedule:
-    - cron: '0 6 * * *'  # Ogni giorno alle 6 del mattino UTC (8:00 italiane)
-    - cron: '0 11 * * *' # Ogni giorno alle 11:00 UTC (13:00 italiane)
-  workflow_dispatch:  # Permette avvio manuale
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+def genera_feed_altissimo():
+    print("\n➡️ Inizio generazione feed per Comune di Altissimo (Home)")
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    try:
+        response = requests.get("https://www.comune.altissimo.vi.it/home.html", timeout=20)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, "lxml")
 
-      - name: Configura Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
+        cards = soup.select("div.card-wrapper.border.border-light.rounded.shadow-sm")
+        print(f"🔎 Trovati {len(cards)} elementi con struttura news")
 
-      - name: Installa dipendenze
-        run: pip install -r requirements.txt
+        fg = FeedGenerator()
+        fg.title("Comune di Altissimo - Home")
+        fg.link(href="https://www.comune.altissimo.vi.it/home.html", rel="alternate")
+        fg.description("Ultime notizie dal sito ufficiale del Comune di Altissimo")
 
-      - name: Lista file repository
-        run: ls -la
+        for card in cards:
+            link_tag = card.select_one("a.text-decoration-none")
+            title = link_tag.get_text(strip=True) if link_tag else ""
+            link = link_tag["href"] if link_tag and "href" in link_tag.attrs else ""
 
-      - name: Esegui generazione feed (Altissimo)
-        run: python Altissimo.py || echo "⚠️ Errore durante generazione Altissimo, proseguo"
+            if not title or not link:
+                continue
 
-      - name: Esegui generazione feed (Malo)
-        run: python Malo.py || echo "⚠️ Errore durante generazione Malo, proseguo"
+            if not link.startswith("http"):
+                link = "https://www.comune.altissimo.vi.it" + link
 
-      - name: Esegui generazione feed (Arzignano)
-        run: python Arzignano.py || echo "⚠️ Errore durante generazione Arzignano, proseguo"
+            pub_date = datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
 
-      - name: Commit e push aggiornamenti
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git add *.xml
-          git commit -m "Aggiornamento automatico feed RSS" || echo "Nessuna modifica"
-          git push
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            fe = fg.add_entry()
+            fe.id(link)
+            fe.title(title)
+            fe.link(href=link)
+            fe.pubDate(pub_date)
+
+            print(f"✅ Aggiunto: {title} → {link}")
+
+        fg.rss_file("altissimo.xml")
+        print("✅ Feed generato correttamente per Comune di Altissimo → altissimo.xml")
+
+    except Exception as e:
+        print(f"❌ Errore feed Altissimo: {e}")
+
+
+if __name__ == "__main__":
+    genera_feed_altissimo()
