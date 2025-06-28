@@ -47,8 +47,8 @@ def genera_feed_gambellara():
 
             print(f"✅ Aggiunto articolo: {title} → {link}")
 
-        fg.rss_file("feed_gambellara.xml")
-        print("✅ Feed generato correttamente per Comune di Gambellara → feed_gambellara.xml")
+        fg.rss_file("gambellara.xml")
+        print("✅ Feed generato correttamente per Comune di Gambellara → gambellara.xml")
 
     except Exception as e:
         print(f"❌ Errore durante la generazione del feed per Comune di Gambellara: {e}")
