@@ -46,7 +46,7 @@ try:
 
         print(f"✅ Aggiunto articolo: {title} → {link}")
 
-    fg.rss_file("feed_velo_home.xml")
+    fg.rss_file("velo.xml")
     print("✅ Feed generato correttamente per Comune di Velo d'Astico (Home)")
 
 except Exception as e:
