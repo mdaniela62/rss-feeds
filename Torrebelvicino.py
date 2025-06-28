@@ -54,7 +54,7 @@ try:
 
         print(f"✅ Aggiunto articolo: {title} → {link}")
 
-    fg.rss_file("feed_torrebelvicino.xml")
+    fg.rss_file("torrebelvicino.xml")
     print("✅ Feed generato correttamente per Comune di Torrebelvicino")
 
 except Exception as e:
