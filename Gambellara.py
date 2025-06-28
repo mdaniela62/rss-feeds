@@ -1,21 +1,19 @@
-""
-# Nuovo script Playwright per Gambellara (usa GitHub Actions, salvataggio su GitHub)
-
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 from datetime import datetime
 import os
-import subprocess
 
 def genera_feed_gambellara():
-    print("➡️ Inizio generazione feed per Comune di Gambellara (con Playwright)")
+    print("\n➡️ Inizio generazione feed per Comune di Gambellara (Playwright visibile + user-agent)")
 
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
-            page = browser.new_page()
+            browser = p.chromium.launch(headless=False)
+            context = browser.new_context(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36")
+            page = context.new_page()
             page.goto("https://www.comune.gambellara.vi.it/home/novita", timeout=20000)
+            page.wait_for_timeout(3000)
             content = page.content()
             browser.close()
 
@@ -52,15 +50,10 @@ def genera_feed_gambellara():
         fg.rss_file("feed_gambellara.xml")
         print("✅ Feed generato correttamente per Comune di Gambellara → feed_gambellara.xml")
 
-        # Commit automatico su GitHub
-        subprocess.run(["git", "config", "--global", "user.name", "github-actions"])
-        subprocess.run(["git", "config", "--global", "user.email", "github-actions@github.com"])
-        subprocess.run(["git", "add", "feed_gambellara.xml"])
-        subprocess.run(["git", "commit", "-m", "Aggiornamento automatico feed Gambellara"])
-        subprocess.run(["git", "push"])
-
     except Exception as e:
         print(f"❌ Errore durante la generazione del feed per Comune di Gambellara: {e}")
 
+
 if __name__ == "__main__":
     genera_feed_gambellara()
+
