@@ -59,7 +59,7 @@ try:
 
         print(f"✅ Aggiunto articolo: {title} → {link}")
 
-    fg.rss_file("feed_breganze.xml")
+    fg.rss_file("breganze.xml")
     print("✅ Feed generato correttamente per Comune di Breganze")
 
 except Exception as e:
