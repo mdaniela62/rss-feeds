@@ -23,6 +23,8 @@ jobs:
           pip install -r requirements.txt
           pip install playwright
           playwright install chromium
+      - name: Comune di Castelgomberto
+        run: python castelgomberto_playwright.py || echo "⚠️ Errore durante generazione Castelgomberto, proseguo"
 
       - name: Genera e pubblica feed per Gambellara
         run: python Gambellara_Playwright.py
