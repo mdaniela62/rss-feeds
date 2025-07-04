@@ -15,7 +15,7 @@ def genera_feed_castelgomberto():
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=False)  
             page = browser.new_page()
-            page.goto(url, timeout=60000)
+            page.goto("https://www.comune.castelgomberto.vi.it/home/novita", timeout=60000)
             time.sleep(5)
             html = page.content()
             browser.close()
@@ -26,7 +26,7 @@ def genera_feed_castelgomberto():
 
         fg = FeedGenerator()
         fg.title("Comune di Castelgomberto - Novità")
-        fg.link(href=url, rel="alternate")
+        fg.link(href="https://www.comune.castelgomberto.vi.it/home/novita", rel="alternate")
         fg.description("Ultime notizie dal sito ufficiale del Comune di Castelgomberto")
 
         titoli_visti = set()
