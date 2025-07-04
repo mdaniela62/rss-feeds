@@ -13,7 +13,7 @@ def genera_feed_castelgomberto():
         base_url = "https://www.comune.castelgomberto.vi.it"
 
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=False)  # meglio per debug
+            browser = p.chromium.launch(headless=True)  
             page = browser.new_page()
             page.goto(url, timeout=60000)
             time.sleep(5)
