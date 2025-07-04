@@ -6,8 +6,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  generate_playwright_feeds:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -15,23 +16,26 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'   # ✅ Corretto
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          playwright install chromium
+          pip install playwright
 
-      - name: Genera e pubblica feed per Gambellara
-        run: python Gambellara_Playwright.py || echo "⚠️ Errore durante generazione Gambellara, proseguo"
+      - name: Install Playwright browsers
+        run: playwright install chromium
 
-      - name: Genera e pubblica feed per Castelgomberto
-        run: python Castelgomberto_Playwright.py || echo "⚠️ Errore durante generazione Castelgomberto, proseguo"
+      - name: Run Castelgomberto feed script
+        run: python Castelgomberto_Playwright.py
+        
+      - name: Run Gambellara feed script
+        run: python Gambellara_Playwright.py
 
-      - name: Commit e push aggiornamenti
+      - name: Commit RSS
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add *.xml
-          git commit -m "Aggiornamento automatico feed RSS" || echo "Nessuna modifica da committare"
-          git push || echo "Push non necessario o già aggiornato"
+          git commit -m "Aggiornamento automatico feed Castelgomberto" || echo "Nessuna modifica da salvare"
+          git push
