@@ -45,7 +45,7 @@ jobs:
     - name: Run script Schiavon
       run: python Schiavon.py || echo "⚠️ Errore feed Schiavon"
 
-       - name: Commit e push aggiornamenti
+    - name: Commit e push aggiornamenti
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@github.com"
