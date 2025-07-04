@@ -2,7 +2,7 @@ name: RSS feed con Playwright
 
 on:
   schedule:
-    - cron: '0 7,13 * * *'  # Esecuzioni alle 07:00 e 13:00 ora italiana
+    - cron: '0 5,13 * * *'  # Due volte al giorno: 05:00 e 13:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.10
+          python-version: 3.10  # ✅ Corretto
 
       - name: Install dependencies
         run: |
