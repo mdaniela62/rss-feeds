@@ -51,7 +51,7 @@ def genera_feed_gambellara():
 
             print(f"✅ Aggiunto articolo: {title} → {link}")
 
-        fg.rss_file("feed_gambellara.xml")
+        fg.rss_file("gambellara.xml")
         print("✅ Feed generato correttamente per Comune di Gambellara → feed_gambellara.xml")
 
         # Commit automatico su GitHub
