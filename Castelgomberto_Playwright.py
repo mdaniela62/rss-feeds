@@ -13,19 +13,10 @@ def genera_feed_castelgomberto():
         base_url = "https://www.comune.castelgomberto.vi.it"
 
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
+            browser = p.chromium.launch(headless=False)  # meglio per debug
             page = browser.new_page()
             page.goto(url, timeout=60000)
-
-            try:
-                page.locator("button:has-text('Accetta')").click()
-                print("✅ Cookie banner accettato")
-                time.sleep(1)
-            except:
-                print("ℹ️ Nessun cookie banner da accettare")
-
-            page.wait_for_load_state("networkidle")
-            time.sleep(3)
+            time.sleep(5)
             html = page.content()
             browser.close()
 
@@ -38,20 +29,20 @@ def genera_feed_castelgomberto():
         fg.link(href=url, rel="alternate")
         fg.description("Ultime notizie dal sito ufficiale del Comune di Castelgomberto")
 
-        valid_count = 0
         titoli_visti = set()
+        valid_count = 0
 
-        for i, card in enumerate(cards, start=1):
+        for i, card in enumerate(cards, 1):
             print(f"📦 Card {i}")
-            h3_tag = card.select_one("h3")
-            a_tag = card.select_one("a[href]")
+            title_tag = card.select_one("h3.card-title")
+            link_tag = card.select_one("a[href]")
 
-            if not a_tag or not h3_tag:
-                print("❌ Nessun <a> o <h3> trovato → scarto\n")
+            if not title_tag or not link_tag:
+                print("❌ Card scartata: mancano <h3> o <a>\n")
                 continue
 
-            title = h3_tag.get_text(strip=True)
-            if title.lower() in ["avvisi", "notizie", "comunicati"]:
+            title = title_tag.get_text(strip=True)
+            if not title or title.lower() in ["avvisi", "notizie", "comunicati"]:
                 print(f"⏭️ Escluso: {title}\n")
                 continue
 
@@ -60,23 +51,21 @@ def genera_feed_castelgomberto():
                 continue
             titoli_visti.add(title)
 
-            href = a_tag.get("href")
+            href = link_tag.get("href")
             if href.startswith("/home/novita"):
                 href = href.replace("/home/novita", "")
 
-            link = urljoin(base_url, href)
-
+            full_link = urljoin(base_url, href)
             print(f"🟢 Titolo: {title}")
-            print(f"🔗 Link: {link}\n")
+            print(f"🔗 Link: {full_link}\n")
 
             pubdate = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S GMT")
 
             fe = fg.add_entry()
-            fe.id(link)
+            fe.id(full_link)
             fe.title(title)
-            fe.link(href=link)
+            fe.link(href=full_link)
             fe.pubDate(pubdate)
-
             valid_count += 1
 
         if valid_count > 0:
