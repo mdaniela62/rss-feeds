@@ -52,12 +52,12 @@ def genera_feed_gambellara():
             print(f"✅ Aggiunto articolo: {title} → {link}")
 
         fg.rss_file("gambellara.xml")
-        print("✅ Feed generato correttamente per Comune di Gambellara → feed_gambellara.xml")
+        print("✅ Feed generato correttamente per Comune di Gambellara → gambellara.xml")
 
         # Commit automatico su GitHub
         subprocess.run(["git", "config", "--global", "user.name", "github-actions"])
         subprocess.run(["git", "config", "--global", "user.email", "github-actions@github.com"])
-        subprocess.run(["git", "add", "feed_gambellara.xml"])
+        subprocess.run(["git", "add", "gambellara.xml"])
         subprocess.run(["git", "commit", "-m", "Aggiornamento automatico feed Gambellara"])
         subprocess.run(["git", "push"])
 
