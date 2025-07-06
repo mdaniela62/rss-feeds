@@ -1,68 +1,97 @@
-""
-# Nuovo script Playwright per Gambellara (usa GitHub Actions, salvataggio su GitHub)
-
-from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
-from datetime import datetime
-import os
-import subprocess
+from datetime import datetime, timezone
+from urllib.parse import urljoin
+from playwright.sync_api import sync_playwright
+import time
 
 def genera_feed_gambellara():
-    print("➡️ Inizio generazione feed per Comune di Gambellara (con Playwright)")
+    print("\n➡️ Inizio generazione feed per Comune di Gambellara")
 
     try:
+        url = "https://www.comune.gambellara.vi.it/home/novita"
+        base_url = "https://www.comune.gambellara.vi.it"
+
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
-            page = browser.new_page()
-            page.goto("https://www.comune.gambellara.vi.it/home/novita", timeout=20000)
-            page.wait_for_timeout(3000)  # aspetta 3 secondi
-            page.screenshot(path="screenshot.png")
-            content = page.content()
+            browser = p.chromium.launch(headless=True,
+                                        args=["--disable-blink-features=AutomationControlled"])
+            context = browser.new_context(
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                           "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                viewport={"width": 1280, "height": 800}
+            )
+            context.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+            page = context.new_page()
+            page.goto(url, timeout=60000)
+
+            try:
+                page.locator("button:has-text('Accetta')").click()
+                print("✅ Cookie banner accettato")
+                time.sleep(1)
+            except:
+                print("ℹ️ Nessun cookie banner da accettare")
+
+            page.wait_for_load_state("networkidle")
+            time.sleep(3)
+            html = page.content()
             browser.close()
 
-        soup = BeautifulSoup(content, "lxml")
-        items = soup.select("div.cmp-list-card-img__body")
-        print(f"🔎 Trovati {len(items)} elementi con selector 'div.cmp-list-card-img__body'")
+        soup = BeautifulSoup(html, "lxml")
+        cards = soup.select("div.card-wrapper")
+        print(f"🔎 Trovati {len(cards)} elementi con selector 'div.card-wrapper'\n")
 
         fg = FeedGenerator()
         fg.title("Comune di Gambellara - Novità")
-        fg.link(href="https://www.comune.gambellara.vi.it/home/novita", rel="alternate")
-        fg.description("Ultime novità dal sito ufficiale del Comune di Gambellara")
+        fg.link(href=url, rel="alternate")
+        fg.description("Ultime notizie dal sito ufficiale del Comune di Gambellara")
 
-        for item in items:
-            a_tag = item.select_one("a")
-            title = a_tag.get_text(strip=True) if a_tag else ""
-            link = a_tag.get("href") if a_tag else None
+        valid_count = 0
+        titoli_visti = set()
 
-            if not title or not link:
+        for i, card in enumerate(cards, start=1):
+            print(f"📦 Card {i}")
+            h3_tag = card.select_one("h3")
+            a_tag = card.select_one("a[href]")
+
+            if not a_tag or not h3_tag:
+                print("❌ Nessun <a> o <h3> trovato → scarto\n")
                 continue
 
-            if not link.startswith("http"):
-                link = "https://www.comune.gambellara.vi.it" + link
+            title = h3_tag.get_text(strip=True)
+            if title.lower() in ["avvisi", "notizie", "comunicati"]:
+                print(f"⏭️ Escluso: {title}\n")
+                continue
 
-            pub_date = datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
+            if title in titoli_visti:
+                print("🔁 Titolo già visto, salto\n")
+                continue
+            titoli_visti.add(title)
+
+            href = a_tag.get("href")
+            link = urljoin(base_url, href)
+
+            print(f"🟢 Titolo: {title}")
+            print(f"🔗 Link: {link}\n")
+
+            pubdate = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S GMT")
 
             fe = fg.add_entry()
             fe.id(link)
             fe.title(title)
             fe.link(href=link)
-            fe.pubDate(pub_date)
+            fe.pubDate(pubdate)
 
-            print(f"✅ Aggiunto articolo: {title} → {link}")
+            valid_count += 1
 
-        fg.rss_file("gambellara.xml")
-        print("✅ Feed generato correttamente per Comune di Gambellara → gambellara.xml")
-
-        # Commit automatico su GitHub
-        subprocess.run(["git", "config", "--global", "user.name", "github-actions"])
-        subprocess.run(["git", "config", "--global", "user.email", "github-actions@github.com"])
-        subprocess.run(["git", "add", "gambellara.xml"])
-        subprocess.run(["git", "commit", "-m", "Aggiornamento automatico feed Gambellara"])
-        subprocess.run(["git", "push"])
+        if valid_count > 0:
+            fg.rss_file("gambellara.xml")
+            print(f"✅ Feed generato → gambellara.xml con {valid_count} articoli")
+        else:
+            print("⚠️ Nessun elemento valido trovato per il feed.")
 
     except Exception as e:
-        print(f"❌ Errore durante la generazione del feed per Comune di Gambellara: {e}")
+        print(f"❌ Errore feed Gambellara: {e}")
+
 
 if __name__ == "__main__":
     genera_feed_gambellara()
