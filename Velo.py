@@ -1,53 +1,97 @@
-import requests
+# Velo_dAstico_Playwright.py
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
-from datetime import datetime
+from datetime import datetime, timezone
+from urllib.parse import urljoin
+from playwright.sync_api import sync_playwright
+import time
 
-# URL corretta della home page del Comune di Velo d'Astico
-URL = "https://www.comune.velodastico.vi.it/"
-TIMEOUT = 10
+def genera_feed_velo():
+    print("\n➡️ Inizio generazione feed per Comune di Velo d'Astico (da /home)")
 
-print("➡️ Inizio generazione feed per Comune di Velo d'Astico (da Home)")
+    try:
+        url = "https://www.comune.velodastico.vi.it/"
+        base_url = "https://www.comune.velodastico.vi.it"
 
-try:
-    response = requests.get(URL, timeout=TIMEOUT)
-    response.raise_for_status()
-    soup = BeautifulSoup(response.content, "lxml")
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True,
+                                        args=["--disable-blink-features=AutomationControlled"])
+            context = browser.new_context(
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                           "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                viewport={"width": 1280, "height": 800}
+            )
+            context.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+            page = context.new_page()
+            page.goto(url, timeout=60000)
 
-    # Selettore CSS corretto per le notizie nella home page
-    items = soup.select("div.data-object_id")
-    print(f"🔎 Trovati {len(items)} elementi con selector 'div.data-object_id'")
+            try:
+                page.locator("button:has-text('Accetta')").click()
+                print("✅ Cookie banner accettato")
+                time.sleep(1)
+            except:
+                print("ℹ️ Nessun cookie banner da accettare")
 
-    fg = FeedGenerator()
-    fg.title("Comune di Velo d'Astico - Novità (Home)")
-    fg.link(href=URL, rel="alternate")
-    fg.description("Ultime novità dal sito ufficiale del Comune di Velo d'Astico (Home)")
+            page.wait_for_load_state("networkidle")
+            time.sleep(3)
+            html = page.content()
+            browser.close()
 
-    for item in items:
-        link_tag = item.select_one("h3 a")
-        title_tag = item.select_one("h3 a")
+        soup = BeautifulSoup(html, "lxml")
+        cards = soup.select("div.card-wrapper")
+        print(f"🔎 Trovati {len(cards)} elementi con selector 'div.card-wrapper'\n")
 
-        if not link_tag or not title_tag:
-            continue
+        fg = FeedGenerator()
+        fg.title("Comune di Velo d'Astico - Novità")
+        fg.link(href=url, rel="alternate")
+        fg.description("Ultime notizie dalla home page del Comune di Velo d'Astico")
 
-        title = title_tag.get_text(strip=True)
+        valid_count = 0
+        titoli_visti = set()
 
-        link = link_tag.get("href")
-        if not link.startswith("http"):
-            link = "https://www.comune.velodastico.vi.it" + link
+        for i, card in enumerate(cards, start=1):
+            print(f"📦 Card {i}")
+            h3_tag = card.select_one("h3")
+            a_tag = card.select_one("a[href]")
 
-        pub_date = datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
+            if not a_tag or not h3_tag:
+                print("❌ Nessun <a> o <h3> trovato → scarto\n")
+                continue
 
-        fe = fg.add_entry()
-        fe.id(link)
-        fe.title(title)
-        fe.link(href=link)
-        fe.pubDate(pub_date)
+            title = h3_tag.get_text(strip=True)
+            if title.lower() in ["avvisi", "notizie", "comunicati"]:
+                print(f"⏭️ Escluso: {title}\n")
+                continue
 
-        print(f"✅ Aggiunto articolo: {title} → {link}")
+            if title in titoli_visti:
+                print("🔁 Titolo già visto, salto\n")
+                continue
+            titoli_visti.add(title)
 
-    fg.rss_file("velo.xml")
-    print("✅ Feed generato correttamente per Comune di Velo d'Astico (Home)")
+            href = a_tag.get("href")
+            link = urljoin(base_url, href)
 
-except Exception as e:
-    print(f"❌ Errore durante la generazione del feed per Comune di Velo d'Astico (Home): {e}")
+            print(f"🟢 Titolo: {title}")
+            print(f"🔗 Link: {link}\n")
+
+            pubdate = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S GMT")
+
+            fe = fg.add_entry()
+            fe.id(link)
+            fe.title(title)
+            fe.link(href=link)
+            fe.pubDate(pubdate)
+
+            valid_count += 1
+
+        if valid_count > 0:
+            fg.rss_file("velo_dastico.xml")
+            print(f"✅ Feed generato → velo_dastico.xml con {valid_count} articoli")
+        else:
+            print("⚠️ Nessun elemento valido trovato per il feed.")
+
+    except Exception as e:
+        print(f"❌ Errore feed Velo d'Astico: {e}")
+
+if __name__ == "__main__":
+    genera_feed_velo()
