@@ -26,16 +26,27 @@ jobs:
       - name: Install Playwright browsers
         run: playwright install chromium
 
+       # Castelgomberto
       - name: Genera e pubblica feed per Castelgomberto
-        run: xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' python Castelgomberto_Playwright.py
-                
-      - name: Run Gambellara feed script
-        run: python Gambellara_Playwright.py
+        run: xvfb-run --auto-servernum -- python Castelgomberto_Playwright.py
 
-      - name: Commit RSS
+      # Gambellara
+      - name: Genera e pubblica feed per Gambellara
+        run: xvfb-run --auto-servernum -- python Gambellara_Playwright.py
+
+      # Velo d'Astico
+      - name: Genera e pubblica feed per Velo d'Astico
+        run: xvfb-run --auto-servernum -- python Velo_dAstico_Playwright.py
+
+      # Torrebelvicino
+      - name: Genera e pubblica feed per Torrebelvicino
+        run: xvfb-run --auto-servernum -- python Torrebelvicino_Playwright.py
+
+     # Upload dei feed RSS
+      - name: Commit e push feed RSS
         run: |
           git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
+          git config --global user.email "github-actions@users.noreply.github.com"
           git add *.xml
-          git commit -m "Aggiornamento automatico feed Castelgomberto" || echo "Nessuna modifica da salvare"
+          git commit -m "Aggiornamento automatico feed RSS" || echo "Nessuna modifica da commettere"
           git push
