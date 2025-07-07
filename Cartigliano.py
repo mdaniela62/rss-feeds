@@ -1,48 +1,92 @@
-import requests
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
-from datetime import datetime
+from datetime import datetime, timezone
+from urllib.parse import urljoin
+from playwright.sync_api import sync_playwright
+import time
 
-# Configurazione Feed Cartigliano
-URL = "https://www.comune.cartigliano.vi.it/"
-TIMEOUT = 10
+def genera_feed_cartigliano():
+    print("\n➡️ Inizio generazione feed per Comune di Cartigliano (da /Novita)")
 
-print("➡️ Inizio generazione feed per Comune di Cartigliano")
+    try:
+        url = "https://www.comune.cartigliano.vi.it/Novita"
+        base_url = "https://www.comune.cartigliano.vi.it"
 
-try:
-    resp = requests.get(URL, timeout=TIMEOUT)
-    resp.raise_for_status()
-    soup = BeautifulSoup(resp.content, "lxml")
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True, args=["--disable-blink-features=AutomationControlled"])
+            context = browser.new_context(
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                           "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                viewport={"width": 1280, "height": 800}
+            )
+            context.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+            page = context.new_page()
+            page.goto(url, timeout=60000)
 
-    # Individua i blocchi di Notizie
-    block = soup.find(lambda t: t.name=="h2" and "Notizie" in t.get_text())
-    items = block.find_next_siblings("h3") if block else []
-    print(f"🔎 Trovati {len(items)} notizie nella sezione 'Notizie'")
+            try:
+                page.locator("button:has-text('Accetta')").click()
+                print("✅ Cookie banner accettato")
+                time.sleep(1)
+            except:
+                print("ℹ️ Nessun cookie banner da accettare")
 
-    fg = FeedGenerator()
-    fg.title("Comune di Cartigliano - Notizie")
-    fg.link(href=URL, rel="alternate")
-    fg.description("Novità dal sito ufficiale del Comune di Cartigliano")
+            page.wait_for_load_state("networkidle")
+            time.sleep(3)
+            html = page.content()
+            browser.close()
 
-    for h3 in items:
-        title = h3.get_text(strip=True)
-        sib = h3.find_next_sibling(text=lambda t: t and any(x in t for x in ["Notizia","Avviso","Avvisa"]))
-        date_txt = sib.strip().split(maxsplit=2)[-2:] if sib else []
-        date_str = " ".join(date_txt)
-        try:
-            pub = datetime.strptime(date_str, "%d %b %Y")
-            pub_date = pub.strftime("%a, %d %b %Y %H:%M:%S GMT")
-        except:
-            pub_date = datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
+        soup = BeautifulSoup(html, "lxml")
+        cards = soup.select("div.card-wrapper")
+        print(f"🔎 Trovati {len(cards)} elementi con selector 'div.card-wrapper'\n")
 
-        link_tag = h3.find("a")
-        link = URL.rstrip("/") + link_tag["href"] if link_tag else URL
-        fe = fg.add_entry()
-        fe.id(link); fe.title(title); fe.link(href=link); fe.pubDate(pub_date)
-        print(f"✅ Aggiunto: {title} – {pub_date}")
+        fg = FeedGenerator()
+        fg.title("Comune di Cartigliano - Novità")
+        fg.link(href=url, rel="alternate")
+        fg.description("Ultime notizie dal sito ufficiale del Comune di Cartigliano")
 
-    fg.rss_file("cartigliano.xml")
-    print("✅ Feed cartigliano.xml creato con successo")
+        valid_count = 0
+        titoli_visti = set()
 
-except Exception as e:
-    print("❌ Errore feed Cartigliano:", e)
+        for i, card in enumerate(cards, start=1):
+            print(f"📦 Card {i}")
+            h3_tag = card.select_one("h3")
+            a_tag = card.select_one("a[href]")
+
+            if not a_tag or not h3_tag:
+                print("❌ Nessun <a> o <h3> trovato → scarto\n")
+                continue
+
+            title = h3_tag.get_text(strip=True)
+            if title.lower() in ["avvisi", "notizie", "comunicati"]:
+                print(f"⏭️ Escluso: {title}\n")
+                continue
+
+            if title in titoli_visti:
+                print("🔁 Titolo già visto, salto\n")
+                continue
+            titoli_visti.add(title)
+
+            href = a_tag.get("href")
+            link = urljoin(base_url, href)
+
+            print(f"🟢 Titolo: {title}")
+            print(f"🔗 Link: {link}\n")
+
+            pubdate = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S GMT")
+
+            fe = fg.add_entry()
+            fe.id(link)
+            fe.title(title)
+            fe.link(href=link)
+            fe.pubDate(pubdate)
+
+            valid_count += 1
+
+        if valid_count > 0:
+            fg.rss_file("cartigliano.xml")
+            print(f"✅ Feed generato → cartigliano.xml con {valid_count} articoli")
+        else:
+            print("⚠️ Nessun elemento valido trovato per il feed.")
+
+    except Exception as e:
+        print(f"❌ Errore feed Cartigliano: {e}")
