@@ -1,16 +1,21 @@
+# Script Playwright per Cartigliano
+
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 from datetime import datetime, timezone
 from urllib.parse import urljoin
 from playwright.sync_api import sync_playwright
 import time
+import traceback   #per il traeback esteso
 
 def genera_feed_cartigliano():
-    print("\n➡️ Inizio generazione feed per Comune di Cartigliano (da /home/novita)")
+    print("\n➡️ Inizio generazione feed per Comune di Cartigliano (da /home/novita.html)")
 
     try:
         url = "https://www.comune.cartigliano.vi.it/home/novita.html"
         base_url = "https://www.comune.cartigliano.vi.it"
+
+        print("🌐 Apro browser Playwright...")
 
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True, args=["--disable-blink-features=AutomationControlled"])
@@ -21,6 +26,7 @@ def genera_feed_cartigliano():
             )
             context.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
             page = context.new_page()
+            print(f"🔗 Navigo verso {url}")
             page.goto(url, timeout=60000)
 
             try:
@@ -30,14 +36,17 @@ def genera_feed_cartigliano():
             except:
                 print("ℹ️ Nessun cookie banner da accettare")
 
+            print("⏳ Attendo caricamento completo della pagina...")
             page.wait_for_load_state("networkidle")
             time.sleep(3)
             html = page.content()
 
+            print("📄 HTML caricato correttamente")
             with open("rendered_CARTIGLIANO.html", "w", encoding="utf-8") as f:
                 f.write(html)
 
             browser.close()
+            print("🛑 Browser chiuso")
 
         soup = BeautifulSoup(html, "lxml")
         cards = soup.select("div.card-wrapper")
@@ -94,3 +103,5 @@ def genera_feed_cartigliano():
 
     except Exception as e:
         print(f"❌ Errore feed Cartigliano: {e}")
+
+ 
