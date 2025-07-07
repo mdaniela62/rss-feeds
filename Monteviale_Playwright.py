@@ -35,6 +35,8 @@ def genera_feed_monteviale():
             page.wait_for_load_state("networkidle")
             time.sleep(3)
             html = page.content()
+            with open("rendered_MONTEVIALE.html", "w", encoding="utf-8") as f:
+                f.write(html)
             browser.close()
 
         soup = BeautifulSoup(html, "lxml")
