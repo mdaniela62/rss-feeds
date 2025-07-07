@@ -90,3 +90,5 @@ def genera_feed_cartigliano():
 
     except Exception as e:
         print(f"❌ Errore feed Cartigliano: {e}")
+if __name__ == "__main__":
+    genera_feed_cartigliano()
