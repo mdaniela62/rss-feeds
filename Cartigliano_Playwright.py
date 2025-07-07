@@ -6,10 +6,10 @@ from playwright.sync_api import sync_playwright
 import time
 
 def genera_feed_cartigliano():
-    print("\n➡️ Inizio generazione feed per Comune di Cartigliano (da /Novita)")
+    print("\n➡️ Inizio generazione feed per Comune di Cartigliano (da /home/novita)")
 
     try:
-        url = "https://www.comune.cartigliano.vi.it/Novita"
+        url = "https://www.comune.cartigliano.vi.it/home/novita.html"
         base_url = "https://www.comune.cartigliano.vi.it"
 
         with sync_playwright() as p:
@@ -32,10 +32,12 @@ def genera_feed_cartigliano():
 
             page.wait_for_load_state("networkidle")
             time.sleep(3)
-           html = page.content()
-           with open("rendered_CARTIGLIANO.html", "w", encoding="utf-8") as f:
-               f.write(html)
-           browser.close()
+            html = page.content()
+
+            with open("rendered_CARTIGLIANO.html", "w", encoding="utf-8") as f:
+                f.write(html)
+
+            browser.close()
 
         soup = BeautifulSoup(html, "lxml")
         cards = soup.select("div.card-wrapper")
@@ -50,7 +52,7 @@ def genera_feed_cartigliano():
         titoli_visti = set()
 
         for i, card in enumerate(cards, start=1):
-            print(f"📦 Card {i}")
+            print(f"📆 Card {i}")
             h3_tag = card.select_one("h3")
             a_tag = card.select_one("a[href]")
 
@@ -92,5 +94,3 @@ def genera_feed_cartigliano():
 
     except Exception as e:
         print(f"❌ Errore feed Cartigliano: {e}")
-if __name__ == "__main__":
-    genera_feed_cartigliano()
