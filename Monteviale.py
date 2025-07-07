@@ -1,64 +1,95 @@
-import requests
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
-from datetime import datetime
+from datetime import datetime, timezone
+from urllib.parse import urljoin
+from playwright.sync_api import sync_playwright
+import time
 
-def genera_feed(nome_comune, url_base, url, selector, base_href):
-    print(f"➡️ Inizio generazione feed per {nome_comune}")
+def genera_feed_monteviale():
+    print("\n➡️ Inizio generazione feed per Comune di Monteviale (da /Novita)")
 
     try:
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.content, "lxml")
+        url = "https://www.comune.monteviale.vi.it/Novita"
+        base_url = "https://www.comune.monteviale.vi.it"
 
-        # DEBUG: salva la pagina HTML per ispezione locale
-        with open(f"debug_{nome_comune.lower().replace(' ', '_')}.html", "w", encoding="utf-8") as f:
-            f.write(soup.prettify())
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True, args=["--disable-blink-features=AutomationControlled"])
+            context = browser.new_context(
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                           "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                viewport={"width": 1280, "height": 800}
+            )
+            context.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+            page = context.new_page()
+            page.goto(url, timeout=60000)
 
-        items = soup.select(selector)
-        if not items:
-            print(f"⚠️ Nessun elemento trovato con '{selector}', provo fallback su tutti i tag <a>")
-            items = soup.find_all("a")
+            try:
+                page.locator("button:has-text('Accetta')").click()
+                print("✅ Cookie banner accettato")
+                time.sleep(1)
+            except:
+                print("ℹ️ Nessun cookie banner da accettare")
 
-        print(f"🔎 Trovati {len(items)} elementi per {nome_comune}")
+            page.wait_for_load_state("networkidle")
+            time.sleep(3)
+            html = page.content()
+            browser.close()
+
+        soup = BeautifulSoup(html, "lxml")
+        cards = soup.select("div.card-wrapper")
+        print(f"🔎 Trovati {len(cards)} elementi con selector 'div.card-wrapper'\n")
 
         fg = FeedGenerator()
-        fg.title(f"{nome_comune} - Novità")
-        fg.link(href=url_base, rel="alternate")
-        fg.description(f"Ultime novità dal sito ufficiale del {nome_comune}")
+        fg.title("Comune di Monteviale - Novità")
+        fg.link(href=url, rel="alternate")
+        fg.description("Ultime notizie dal sito ufficiale del Comune di Monteviale")
 
-        for item in items:
-            title = item.get_text(strip=True)
-            link = item.get("href")
-            if not title or not link or link.startswith("#"):
+        valid_count = 0
+        titoli_visti = set()
+
+        for i, card in enumerate(cards, start=1):
+            print(f"📦 Card {i}")
+            h3_tag = card.select_one("h3")
+            a_tag = card.select_one("a[href]")
+
+            if not a_tag or not h3_tag:
+                print("❌ Nessun <a> o <h3> trovato → scarto\n")
                 continue
 
-            if not link.startswith("http"):
-                link = base_href.rstrip("/") + link
+            title = h3_tag.get_text(strip=True)
+            if title.lower() in ["avvisi", "notizie", "comunicati"]:
+                print(f"⏭️ Escluso: {title}\n")
+                continue
 
-            pub_date = datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
+            if title in titoli_visti:
+                print("🔁 Titolo già visto, salto\n")
+                continue
+            titoli_visti.add(title)
+
+            href = a_tag.get("href")
+            link = urljoin(base_url, href)
+
+            print(f"🟢 Titolo: {title}")
+            print(f"🔗 Link: {link}\n")
+
+            pubdate = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S GMT")
 
             fe = fg.add_entry()
             fe.id(link)
             fe.title(title)
             fe.link(href=link)
-            fe.pubDate(pub_date)
+            fe.pubDate(pubdate)
 
-            print(f"✅ Aggiunto articolo: {title} → {link}")
+            valid_count += 1
 
-        filename = f"feed_{nome_comune.lower().replace(' ', '_')}.xml"
-        fg.rss_file(filename)
-        print(f"✅ Feed generato correttamente per {nome_comune} → {filename}")
+        if valid_count > 0:
+            fg.rss_file("monteviale.xml")
+            print(f"✅ Feed generato → monteviale.xml con {valid_count} articoli")
+        else:
+            print("⚠️ Nessun elemento valido trovato per il feed.")
 
     except Exception as e:
-        print(f"❌ Errore durante la generazione del feed per {nome_comune}: {e}")
+        print(f"❌ Errore feed Monteviale: {e}")
 
-
-# Comune di Monteviale
-genera_feed(
-    nome_comune="Comune di Monteviale",
-    url_base="https://www.comune.monteviale.vi.it/",
-    url="https://www.comune.monteviale.vi.it/",
-    selector="div.card.cmp-list-card-img",
-    base_href="https://www.comune.monteviale.vi.it"
-)
+if __name__ == "__main__":
+       genera_feed_monteviale()
