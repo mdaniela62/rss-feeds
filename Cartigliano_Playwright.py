@@ -21,6 +21,9 @@ def genera_feed_cartigliano():
             )
             context.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
             page = context.new_page()
+            with open("rendered_CARTIGLIANO.html", "w", encoding="utf-8") as f:
+                f.write(html)
+
             page.goto(url, timeout=60000)
 
             try:
