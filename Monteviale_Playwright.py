@@ -21,8 +21,6 @@ def genera_feed_monteviale():
             )
             context.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
             page = context.new_page()
-            with open("rendered_MONTEVIALE.html", "w", encoding="utf-8") as f:
-                f.write(html)
             page.goto(url, timeout=60000)
 
             try:
@@ -35,8 +33,8 @@ def genera_feed_monteviale():
             page.wait_for_load_state("networkidle")
             time.sleep(3)
             html = page.content()
-            with open("rendered_MONTEVIALE.html", "w", encoding="utf-8") as f:
-                f.write(html)
+            with open("rendered_CARTIGLIANO.html", "w", encoding="utf-8") as f:
+                 f.write(html)
             browser.close()
 
         soup = BeautifulSoup(html, "lxml")
