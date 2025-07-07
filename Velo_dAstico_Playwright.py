@@ -1,4 +1,3 @@
-# Velo_dAstico_Playwright.py
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 from datetime import datetime, timezone
@@ -14,8 +13,7 @@ def genera_feed_velo():
         base_url = "https://www.comune.velodastico.vi.it"
 
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True,
-                                        args=["--disable-blink-features=AutomationControlled"])
+            browser = p.chromium.launch(headless=True, args=["--disable-blink-features=AutomationControlled"])
             context = browser.new_context(
                 user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                            "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -44,7 +42,7 @@ def genera_feed_velo():
         fg = FeedGenerator()
         fg.title("Comune di Velo d'Astico - Novità")
         fg.link(href=url, rel="alternate")
-        fg.description("Ultime notizie dalla home page del Comune di Velo d'Astico")
+        fg.description("Ultime notizie dal sito ufficiale del Comune di Velo d'Astico")
 
         valid_count = 0
         titoli_visti = set()
