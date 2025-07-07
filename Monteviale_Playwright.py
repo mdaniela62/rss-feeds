@@ -9,7 +9,7 @@ def genera_feed_monteviale():
     print("\n➡️ Inizio generazione feed per Comune di Monteviale (da /Novita)")
 
     try:
-        url = "https://www.comune.monteviale.vi.it/Novita"
+        url = "https://www.comune.monteviale.vi.it/home/novita"
         base_url = "https://www.comune.monteviale.vi.it"
 
         with sync_playwright() as p:
