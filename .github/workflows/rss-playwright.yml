@@ -42,6 +42,14 @@ jobs:
       - name: Genera e pubblica feed per Torrebelvicino
         run: xvfb-run --auto-servernum -- python Torrebelvicino_Playwright.py
 
+        # Cartigliano
+      - name: Genera e pubblica feed per Cartigliano
+        run: xvfb-run --auto-servernum -- python Cartigliano_Playwright.py
+
+        # Monteviale
+      - name: Genera e pubblica feed per Monteviale
+        run: xvfb-run --auto-servernum -- python Monteviale_Playwright.py
+
      # Upload dei feed RSS
       - name: Commit e push feed RSS
         run: |
