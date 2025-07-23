@@ -6,7 +6,7 @@
     <description>Ultime notizie dal sito ufficiale del Comune di Malo</description>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
-    <lastBuildDate>Tue, 22 Jul 2025 11:09:44 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 23 Jul 2025 04:32:32 +0000</lastBuildDate>
     <item>
       <title>Avviso pubblico per manifestazione di interesse per la gestione delle manifestazioni Maratona 6 comuni - M6C per il biennio 2025-2026Il termine per la presentazione della manifestazione d'interesse è fissato per le ore 12:30 del 27/06/2025</title>
       <link>http://www.comune.malo.vi.it/web/malo/servizi/servizi-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_l6Hb&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=5b28dfce-0c2d-43c3-baef-11e66c53d56d&amp;lang=it&amp;contentArea=_Malo_servizi-interna_Body1_</link>
@@ -26,13 +26,6 @@
       <link>http://www.comune.malo.vi.it/web/malo/vivere/vivere-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_nc6A&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=9215dc08-6e6d-43f7-81b7-89184fadc12d&amp;lang=it&amp;contentArea=_Malo_vivere-interna_Body1_</link>
       <description>Scadenza presentazione modulo: 6 luglio 2025</description>
       <guid isPermaLink="true">http://www.comune.malo.vi.it/web/malo/vivere/vivere-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_nc6A&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=9215dc08-6e6d-43f7-81b7-89184fadc12d&amp;lang=it&amp;contentArea=_Malo_vivere-interna_Body1_</guid>
-      <pubDate>Wed, 16 Jul 2025 00:00:00 +0000</pubDate>
-    </item>
-    <item>
-      <title>Mediterranea 3605-12 e 19 luglio 2025</title>
-      <link>http://www.comune.malo.vi.it/web/malo/vivere/vivere-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_nc6A&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=acac21ef-37f3-4529-ad5a-6c1d55396ebb&amp;lang=it&amp;contentArea=_Malo_vivere-interna_Body1_</link>
-      <description>5-12 e 19 luglio 2025</description>
-      <guid isPermaLink="true">http://www.comune.malo.vi.it/web/malo/vivere/vivere-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_nc6A&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=acac21ef-37f3-4529-ad5a-6c1d55396ebb&amp;lang=it&amp;contentArea=_Malo_vivere-interna_Body1_</guid>
       <pubDate>Wed, 16 Jul 2025 00:00:00 +0000</pubDate>
     </item>
     <item>
@@ -57,18 +50,18 @@
       <pubDate>Fri, 18 Jul 2025 00:00:00 +0000</pubDate>
     </item>
     <item>
+      <title>Scopri Malo. Appuntamenti per conoscere il territorio27 luglio e 31 agosto</title>
+      <link>http://www.comune.malo.vi.it/web/malo/vivere/vivere-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_nc6A&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=f8b87cd2-3083-4f27-9f64-1239abcb8b4d&amp;lang=it&amp;contentArea=_Malo_vivere-interna_Body1_</link>
+      <description>27 luglio e 31 agosto</description>
+      <guid isPermaLink="true">http://www.comune.malo.vi.it/web/malo/vivere/vivere-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_nc6A&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=f8b87cd2-3083-4f27-9f64-1239abcb8b4d&amp;lang=it&amp;contentArea=_Malo_vivere-interna_Body1_</guid>
+      <pubDate>Tue, 22 Jul 2025 00:00:00 +0000</pubDate>
+    </item>
+    <item>
       <title>VERIFICHE A CAMPIONE DELLE DICHIARAZIONI SOSTITUTIVE DI ATTO DI NOTORIETÀ, RELATIVE AL POSSESSO DEI REQUISITI DI PARTECIPAZIONE E DI QUALIFICAZIONE PRESENTATE DAGLI OPERATORI ECONOMICI NELLE PROCEDURE DI AFFIDAMENTO DIRETTO, DI CUI ALLARTICOLO 50, COMMA 1, LETTERE A) E B), DI IMPORTO INFERIORE AD EURO 40.000. AVVISO PUBBLICO PER L' ESPLETAMENTO DELLE PROCEDURE DI SORTEGGIO</title>
       <link>http://www.comune.malo.vi.it/web/malo/servizi/servizi-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_l6Hb&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=cca2bb6d-2f33-4bbd-982a-fbe6406ec90e&amp;lang=it&amp;contentArea=_Malo_servizi-interna_Body1_</link>
       <description>VERIFICHE A CAMPIONE DELLE DICHIARAZIONI SOSTITUTIVE DI ATTO DI NOTORIETÀ, RELATIVE AL POSSESSO DEI REQUISITI DI PARTECIPAZIONE E DI QUALIFICAZIONE PRESENTATE DAGLI OPERATORI ECONOMICI NELLE PROCEDURE DI AFFIDAMENTO DIRETTO, DI CUI ALLARTICOLO 50, COMMA 1, LETTERE A) E B), DI IMPORTO INFERIORE AD EURO 40.000. AVVISO PUBBLICO PER L' ESPLETAMENTO DELLE PROCEDURE DI SORTEGGIO</description>
       <guid isPermaLink="true">http://www.comune.malo.vi.it/web/malo/servizi/servizi-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_l6Hb&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=cca2bb6d-2f33-4bbd-982a-fbe6406ec90e&amp;lang=it&amp;contentArea=_Malo_servizi-interna_Body1_</guid>
       <pubDate>Wed, 16 Jul 2025 00:00:00 +0000</pubDate>
-    </item>
-    <item>
-      <title>Presentazione libro del centenario del Gruppo Alpini Malo19 luglio 2025</title>
-      <link>http://www.comune.malo.vi.it/web/malo/vivere/vivere-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_nc6A&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=6c73e0ca-8fb5-497d-9d7d-dbd3aec1e3e6&amp;lang=it&amp;contentArea=_Malo_vivere-interna_Body1_</link>
-      <description>19 luglio 2025</description>
-      <guid isPermaLink="true">http://www.comune.malo.vi.it/web/malo/vivere/vivere-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_nc6A&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=6c73e0ca-8fb5-497d-9d7d-dbd3aec1e3e6&amp;lang=it&amp;contentArea=_Malo_vivere-interna_Body1_</guid>
-      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
     </item>
     <item>
       <title>Introduzione alla stampa 3D. Corso di formazione gratuito</title>
@@ -89,6 +82,13 @@
       <link>http://www.comune.malo.vi.it/web/malo/vivere/vivere-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_nc6A&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=7be339e1-cd60-4758-bd6a-678a0a07293e&amp;lang=it&amp;contentArea=_Malo_vivere-interna_Body1_</link>
       <description>25 luglio 2025</description>
       <guid isPermaLink="true">http://www.comune.malo.vi.it/web/malo/vivere/vivere-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_nc6A&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=7be339e1-cd60-4758-bd6a-678a0a07293e&amp;lang=it&amp;contentArea=_Malo_vivere-interna_Body1_</guid>
+      <pubDate>Tue, 22 Jul 2025 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Convocazione del Consiglio Comunale anche in diretta streamingMartedì 29 luglio 2025 ore 19.00</title>
+      <link>http://www.comune.malo.vi.it/web/malo/area-istituzionale/area-istituzionale-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_Yl0I&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=35e09b60-8eab-46f9-8927-33c4b0c30397&amp;lang=it&amp;contentArea=_Malo_area-istituzionale-interna_Body1_</link>
+      <description>Martedì 29 luglio 2025 ore 19.00</description>
+      <guid isPermaLink="true">http://www.comune.malo.vi.it/web/malo/area-istituzionale/area-istituzionale-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_Yl0I&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=35e09b60-8eab-46f9-8927-33c4b0c30397&amp;lang=it&amp;contentArea=_Malo_area-istituzionale-interna_Body1_</guid>
       <pubDate>Tue, 22 Jul 2025 00:00:00 +0000</pubDate>
     </item>
   </channel>
