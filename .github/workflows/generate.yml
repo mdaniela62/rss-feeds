@@ -1,0 +1,32 @@
+name: Genera feed selezionati
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  generate-feeds:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install jinja2 requests beautifulsoup4
+
+      - name: Esegui script per Schio
+        run: python generate_rss.py schio
+
+      - name: Commit e push dei feed
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add feeds/
+          git commit -m "Aggiornamento feed automatico" || echo "Nessuna modifica"
+          git push
