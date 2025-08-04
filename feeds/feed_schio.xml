@@ -1,59 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">
 <channel>
-    <title>Comune di Schio (Playwright)</title>
+    <title>Comune di Schio</title>
     <link>https://www.comune.schio.vi.it/Novita</link>
-    <description>Ultime notizie da Comune di Schio (Playwright)</description>
-    <lastBuildDate>Mon, 04 Aug 2025 19:07:03 </lastBuildDate>
+    <description>Ultime notizie da Comune di Schio</description>
+    <lastBuildDate>Mon, 04 Aug 2025 17:13:14 </lastBuildDate>
 
-    
-    <item>
-        <title>Scuola dell’infanzia di Giavenale: nuovi interventi per una scuola più sicura e funzionale</title>
-        <link>https://www.comune.schio.vi.it/Novita/Notizie/Scuola-dell-infanzia-di-Giavenale-nuovi-interventi-per-una-scuola-piu-sicura-e-funzionale</link>
-        <description>Conclusi gli interventi strutturali per un importo di circa 40.000 euro.
-Data di pubblicazione: 04/08/2025</description>
-        <pubDate>Mon, 04 Aug 2025</pubDate>
-    </item>
-    
-    <item>
-        <title>Sospensione del servizio di assistenza sociale</title>
-        <link>https://www.comune.schio.vi.it/Novita/Avvisi/Sospensione-del-servizio-di-assistenza-sociale</link>
-        <description>Venerdì 8 agosto
-Data di pubblicazione: 01/08/2025</description>
-        <pubDate>Fri, 01 Aug 2025</pubDate>
-    </item>
-    
-    <item>
-        <title>Modifica alla circolazione in Pasubio e G.B. Conte</title>
-        <link>https://www.comune.schio.vi.it/Novita/Avvisi/Modifica-alla-circolazione-in-Pasubio-e-G.B.-Conte</link>
-        <description>Per gli eventi estivi in programma presso l'anfiteatro del Palazzo Toaldi Capra nel mese di agosto
-Data di pubblicazione: 01/08/2025</description>
-        <pubDate>Fri, 01 Aug 2025</pubDate>
-    </item>
-    
-    <item>
-        <title>Progetto HUB INCLUSIONE – Manifestazione di interesse per la collaborazione alla rete pubblico-privata dell’Ambito Territoriale Sociale VEN_04</title>
-        <link>https://www.comune.schio.vi.it/Novita/Avvisi/Progetto-HUB-INCLUSIONE-Manifestazione-di-interesse-per-la-collaborazione-alla-rete-pubblico-privata-dell-Ambito-Territoriale-Sociale-VEN_04</link>
-        <description>avviso pubblico
-Data di pubblicazione: 31/07/2025</description>
-        <pubDate>Thu, 31 Jul 2025</pubDate>
-    </item>
-    
-    <item>
-        <title>Caso di Dengue: unità di crisi in Comune e ordinanza per disinfestazione urgente</title>
-        <link>https://www.comune.schio.vi.it/Novita/Avvisi/Caso-di-Dengue-unita-di-crisi-in-Comune-e-ordinanza-per-disinfestazione-urgente</link>
-        <description>Comunicazione pervenuta dall'Ulss 7 Pedemontana
-Data di pubblicazione: 30/07/2025</description>
-        <pubDate>Wed, 30 Jul 2025</pubDate>
-    </item>
-    
-    <item>
-        <title>“mutAZIONI: I Segni” – Aperto il bando per l’11ª edizione della mostra d’arte contemporanea a Schio</title>
-        <link>https://www.comune.schio.vi.it/Novita/Notizie/mutAZIONI-I-Segni-Aperto-il-bando-per-l-11a-edizione-della-mostra-d-arte-contemporanea-a-Schio</link>
-        <description>Scadenza per la candidatura: 27 ottobre 2025
-Data di pubblicazione: 29/07/2025</description>
-        <pubDate>Tue, 29 Jul 2025</pubDate>
-    </item>
     
 </channel>
 </rss>
