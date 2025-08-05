@@ -6,7 +6,7 @@
     <description>Ultime notizie dal sito ufficiale del Comune di Malo</description>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
-    <lastBuildDate>Mon, 04 Aug 2025 11:10:56 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 05 Aug 2025 04:38:39 +0000</lastBuildDate>
     <item>
       <title>Esperienza forti 2025. Attività estive di volontariato per giovani dai 15 ai 23 anni</title>
       <link>http://www.comune.malo.vi.it/web/malo/vivere/vivere-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_nc6A&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=b54f1d5d-ff9c-46b7-ac53-e10cce7b4319&amp;lang=it&amp;contentArea=_Malo_vivere-interna_Body1_</link>
@@ -85,11 +85,11 @@
       <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
     </item>
     <item>
-      <title>AMALOFESTIVAL 5ª edizione: Viaggio nell' IncantoLo spettacolo del 2 agosto, a causa del maltempo, E ' SPOSTATO AL COPERTO, PRESSO IL CINEMA AURORA (via chiesa 36, Malo)</title>
+      <title>AMALOFESTIVAL 5ª edizione: Viaggio nell' Incanto</title>
       <link>http://www.comune.malo.vi.it/web/malo/vivere/vivere-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_nc6A&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=7f276709-f651-41c7-b35e-06822f96be2f&amp;lang=it&amp;contentArea=_Malo_vivere-interna_Body1_</link>
-      <description>Lo spettacolo del 2 agosto, a causa del maltempo, E ' SPOSTATO AL COPERTO, PRESSO IL CINEMA AURORA (via chiesa 36, Malo)</description>
+      <description>AMALOFESTIVAL 5ª edizione: Viaggio nell' Incanto</description>
       <guid isPermaLink="true">http://www.comune.malo.vi.it/web/malo/vivere/vivere-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_nc6A&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=7f276709-f651-41c7-b35e-06822f96be2f&amp;lang=it&amp;contentArea=_Malo_vivere-interna_Body1_</guid>
-      <pubDate>Fri, 01 Aug 2025 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 04 Aug 2025 00:00:00 +0000</pubDate>
     </item>
   </channel>
 </rss>
