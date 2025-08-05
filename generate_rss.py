@@ -10,6 +10,14 @@ def load_template():
 
 def generate_feed(module_name):
     module = importlib.import_module(f"comuni.{module_name}")
+# Esegui la funzione generate_feed() o main() se esistono
+if hasattr(module, "generate_feed"):
+    module.generate_feed()
+elif hasattr(module, "main"):
+    module.main()
+else:
+    print(f"⚠️  Nessuna funzione trovata in {module_name}")
+
     items = module.get_items()
     info = module.SITE_INFO
 
