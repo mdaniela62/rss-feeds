@@ -1,56 +1,76 @@
 from playwright.sync_api import sync_playwright
 from datetime import datetime
+import xml.etree.ElementTree as ET
+import os
 
 SITE_INFO = {
-    "name": "Comune di Schio (Playwright)",
+    "name": "Comune di Schio",
     "url": "https://www.comune.schio.vi.it/Novita",
     "output": "feeds/feed_schio.xml"
 }
 
 def get_items():
-    items = []
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        page.goto(SITE_INFO["url"], timeout=15000)
+        page.goto(SITE_INFO["url"], timeout=60000)
 
-        page.wait_for_selector("div.card-teaser, div.card.card-teaser-image", timeout=10000)
+        # Accetta cookies se presenti
+        try:
+            page.click("button:has-text('Accetta')", timeout=5000)
+            print("✅ Cookies accettati")
+        except:
+            print("ℹ️ Nessun banner cookies trovato")
 
-        articles = page.query_selector_all("div.card-teaser, div.card.card-teaser-image")
-        for article in articles:
-            title_tag = article.query_selector("h3.card-title")
-            link_tag = article.query_selector("a.read-more")
-            description_tag = article.query_selector("div.text-paragraph-card")
-            date_tag = article.query_selector("strong")
+        page.wait_for_timeout(3000)
 
-            title = title_tag.inner_text().strip() if title_tag else "Senza titolo"
-            link = link_tag.get_attribute("href") if link_tag else "/"
-            if not link.startswith("http"):
-                link = "https://www.comune.schio.vi.it" + link
-            description = description_tag.inner_text().strip() if description_tag else ""
-            pub_date = ""
+        items = []
+        cards = page.query_selector_all("div.card.card-teaser")
+        print(f"Trovati {len(cards)} articoli.")
 
-            if date_tag and "Data di pubblicazione" in date_tag.inner_text():
-                raw = date_tag.evaluate("el => el.nextSibling?.textContent") or ""
-                raw = raw.strip()
-                try:
-                    pub_date = datetime.strptime(raw, "%d/%m/%Y").strftime("%a, %d %b %Y")
-                except:
-                    pass
+        for card in cards:
+            title_elem = card.query_selector("h3.card-title")
+            link_elem = card.query_selector("a.read-more")
+            date_elem = card.query_selector("div:has-text('Data di pubblicazione')")
+
+            title = title_elem.inner_text().strip() if title_elem else "Senza titolo"
+            link = link_elem.get_attribute("href") if link_elem else SITE_INFO["url"]
+            date_str = date_elem.inner_text().replace("Data di pubblicazione:", "").strip() if date_elem else ""
+            try:
+                pub_date = datetime.strptime(date_str, "%d/%m/%Y").strftime("%a, %d %b %Y")
+            except:
+                pub_date = datetime.now().strftime("%a, %d %b %Y")
 
             items.append({
                 "title": title,
                 "link": link,
-                "description": description,
                 "pubDate": pub_date
             })
 
         browser.close()
-    return items
+        return items
+
+def generate_feed():
+    items = get_items()
+
+    rss = ET.Element("rss", version="2.0")
+    channel = ET.SubElement(rss, "channel")
+
+    ET.SubElement(channel, "title").text = SITE_INFO["name"]
+    ET.SubElement(channel, "link").text = SITE_INFO["url"]
+    ET.SubElement(channel, "description").text = f"Ultime notizie da {SITE_INFO['name']}"
+    ET.SubElement(channel, "lastBuildDate").text = datetime.now().strftime("%a, %d %b %Y %H:%M:%S ")
+
+    for item in items:
+        item_elem = ET.SubElement(channel, "item")
+        ET.SubElement(item_elem, "title").text = item["title"]
+        ET.SubElement(item_elem, "link").text = item["link"]
+        ET.SubElement(item_elem, "pubDate").text = item["pubDate"]
+
+    os.makedirs(os.path.dirname(SITE_INFO["output"]), exist_ok=True)
+    tree = ET.ElementTree(rss)
+    tree.write(SITE_INFO["output"], encoding="utf-8", xml_declaration=True)
+    print(f"✅ Feed generato: {SITE_INFO['output']}")
 
 if __name__ == "__main__":
-    print(f"➡️  Eseguo Playwright per: {SITE_INFO['url']}")
-    articoli = get_items()
-    print(f"Trovati {len(articoli)} articoli.")
-    for a in articoli[:5]:
-        print("-", a["title"])
+    generate_feed()
