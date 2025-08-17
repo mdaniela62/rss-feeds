@@ -1,52 +1,76 @@
-from bs4 import BeautifulSoup
-from feedgen.feed import FeedGenerator
-from datetime import datetime, timezone
-import requests
+from playwright.sync_api import sync_playwright
+from datetime import datetime
+import xml.etree.ElementTree as ET
+import os
 
-def genera_feed_schio():
-    print("\n➡️ Inizio generazione feed per Comune di Schio")
+SITE_INFO = {
+    "name": "Comune di Schio",
+    "url": "https://www.comune.schio.vi.it/Novita",
+    "output": "feeds/schio.xml"
+}
 
-    try:
-        url = "https://www.comune.schio.vi.it/home/novita.html"
-        base_url = "https://www.comune.schio.vi.it"
-        response = requests.get(url, timeout=20)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, "lxml")
+def get_items():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+        page.goto(SITE_INFO["url"], timeout=60000)
 
-        items = soup.select("div.cmp-list-card-img__body")
-        print(f"🔎 Trovati {len(items)} elementi con selector 'div.cmp-list-card-img__body'")
+        # Accetta cookies se presenti
+        try:
+            page.click("button:has-text('Accetta')", timeout=5000)
+            print("[OK] Cookies accettati")
+        except:
+            print("[INFO] Nessun banner cookies trovato")
 
-        fg = FeedGenerator()
-        fg.title("Comune di Schio - Novità")
-        fg.link(href=url, rel="alternate")
-        fg.description("Ultime notizie dal sito ufficiale del Comune di Schio")
+        page.wait_for_timeout(3000)
 
-        for item in items:
-            link_tag = item.select_one("a[data-element='news-link']")
-            title = link_tag.get_text(strip=True) if link_tag else None
-            link = link_tag.get("href") if link_tag else None
+        items = []
+        cards = page.query_selector_all("div.card.card-teaser")
+        print(f"Trovati {len(cards)} articoli.")
 
-            if not title or not link:
-                continue
+        for card in cards:
+            title_elem = card.query_selector("h3.card-title")
+            link_elem = card.query_selector("a.read-more")
+            date_elem = card.query_selector("div:has-text('Data di pubblicazione')")
 
-            if not link.startswith("http"):
-                link = base_url + link
+            title = title_elem.inner_text().strip() if title_elem else "Senza titolo"
+            link = link_elem.get_attribute("href") if link_elem else SITE_INFO["url"]
+            date_str = date_elem.inner_text().replace("Data di pubblicazione:", "").strip() if date_elem else ""
+            try:
+                pub_date = datetime.strptime(date_str, "%d/%m/%Y").strftime("%a, %d %b %Y")
+            except:
+                pub_date = datetime.now().strftime("%a, %d %b %Y")
 
-            pubdate = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S GMT")
+            items.append({
+                "title": title,
+                "link": link,
+                "pubDate": pub_date
+            })
 
-            fe = fg.add_entry()
-            fe.id(link)
-            fe.title(title)
-            fe.link(href=link)
-            fe.pubDate(pubdate)
+        browser.close()
+        return items
 
-            print(f"✅ Aggiunto: {title} → {link}")
+def generate_feed():
+    items = get_items()
 
-        fg.rss_file("schio.xml")
-        print("✅ Feed generato → schio.xml")
+    rss = ET.Element("rss", version="2.0")
+    channel = ET.SubElement(rss, "channel")
 
-    except Exception as e:
-        print(f"❌ Errore feed Schio: {e}")
+    ET.SubElement(channel, "title").text = SITE_INFO["name"]
+    ET.SubElement(channel, "link").text = SITE_INFO["url"]
+    ET.SubElement(channel, "description").text = f"Ultime notizie da {SITE_INFO['name']}"
+    ET.SubElement(channel, "lastBuildDate").text = datetime.now().strftime("%a, %d %b %Y %H:%M:%S ")
+
+    for item in items:
+        item_elem = ET.SubElement(channel, "item")
+        ET.SubElement(item_elem, "title").text = item["title"]
+        ET.SubElement(item_elem, "link").text = item["link"]
+        ET.SubElement(item_elem, "pubDate").text = item["pubDate"]
+
+    os.makedirs(os.path.dirname(SITE_INFO["output"]), exist_ok=True)
+    tree = ET.ElementTree(rss)
+    tree.write(SITE_INFO["output"], encoding="utf-8", xml_declaration=True)
+    print(f"[OK] Feed generato: {SITE_INFO['output']}")
 
 if __name__ == "__main__":
-    genera_feed_schio()
+    generate_feed()

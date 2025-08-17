@@ -8,8 +8,9 @@ URL = "https://www.comune.arzignano.vi.it/home.html"
 
 # Timeout massimo per la richiesta HTTP (in secondi)
 TIMEOUT = 10
+def generate_feed():
 
-print("➡️ Inizio generazione feed per Comune di Arzignano")
+   print(" Inizio generazione feed per Comune di Arzignano")
 
 try:
     response = requests.get(URL, timeout=TIMEOUT)
@@ -18,7 +19,7 @@ try:
 
     # Selezione delle notizie "in primo piano"
     items = soup.select("div.card-wrapper")
-    print(f"🔎 Trovati {len(items)} elementi con selector 'div.card-wrapper'")
+    print(f" Trovati {len(items)} elementi con selector 'div.card-wrapper'")
 
     fg = FeedGenerator()
     fg.title("Comune di Arzignano - Novità")
@@ -45,10 +46,14 @@ try:
         fe.link(href=link)
         fe.pubDate(pub_date)
 
-        print(f"✅ Aggiunto articolo: {title} → {link}")
+        print(f" Aggiunto articolo: {title} - {link}")
 
     fg.rss_file("arzignano.xml")
-    print("✅ Feed generato correttamente per Comune di Arzignano")
+    print(" Feed generato correttamente per Comune di Arzignano")
 
 except Exception as e:
-    print(f"❌ Errore durante la generazione del feed per Comune di Arzignano: {e}")
+    print(f" Errore durante la generazione del feed per Comune di Arzignano: {e}")
+
+if __name__ == "__main__":
+    generate_feed()
+

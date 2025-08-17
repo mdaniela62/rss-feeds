@@ -5,16 +5,15 @@ from urllib.parse import urljoin
 from playwright.sync_api import sync_playwright
 import time
 
-def genera_feed_gambellara():
-    print("\n➡️ Inizio generazione feed per Comune di Gambellara")
+def generate_feed():
+    print(" Inizio generazione feed per Comune di Monteviale (da /Novita)")
 
     try:
-        url = "https://www.comune.gambellara.vi.it/home/novita"
-        base_url = "https://www.comune.gambellara.vi.it"
+        url = "https://www.comune.monteviale.vi.it/home/novita"
+        base_url = "https://www.comune.monteviale.vi.it"
 
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True,
-                                        args=["--disable-blink-features=AutomationControlled"])
+            browser = p.chromium.launch(headless=True, args=["--disable-blink-features=AutomationControlled"])
             context = browser.new_context(
                 user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                            "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -26,52 +25,54 @@ def genera_feed_gambellara():
 
             try:
                 page.locator("button:has-text('Accetta')").click()
-                print("✅ Cookie banner accettato")
+                print(" Cookie banner accettato")
                 time.sleep(1)
             except:
-                print("ℹ️ Nessun cookie banner da accettare")
+                print(" Nessun cookie banner da accettare")
 
             page.wait_for_load_state("networkidle")
             time.sleep(3)
             html = page.content()
+            with open("rendered_MONTEVIALE.html", "w", encoding="utf-8") as f:
+                 f.write(html)
             browser.close()
 
         soup = BeautifulSoup(html, "lxml")
         cards = soup.select("div.card-wrapper")
-        print(f"🔎 Trovati {len(cards)} elementi con selector 'div.card-wrapper'\n")
+        print(f" Trovati {len(cards)} elementi con selector 'div.card-wrapper'\n")
 
         fg = FeedGenerator()
-        fg.title("Comune di Gambellara - Novità")
+        fg.title("Comune di Monteviale - Novità")
         fg.link(href=url, rel="alternate")
-        fg.description("Ultime notizie dal sito ufficiale del Comune di Gambellara")
+        fg.description("Ultime notizie dal sito ufficiale del Comune di Monteviale")
 
         valid_count = 0
         titoli_visti = set()
 
         for i, card in enumerate(cards, start=1):
-            print(f"📦 Card {i}")
+            print(f" Card {i}")
             h3_tag = card.select_one("h3")
             a_tag = card.select_one("a[href]")
 
             if not a_tag or not h3_tag:
-                print("❌ Nessun <a> o <h3> trovato → scarto\n")
+                print(" Nessun <a> o <h3> trovato : scarto\n")
                 continue
 
             title = h3_tag.get_text(strip=True)
             if title.lower() in ["avvisi", "notizie", "comunicati"]:
-                print(f"⏭️ Escluso: {title}\n")
+                print(f" Escluso: {title}\n")
                 continue
 
             if title in titoli_visti:
-                print("🔁 Titolo già visto, salto\n")
+                print(" Titolo già visto, salto\n")
                 continue
             titoli_visti.add(title)
 
             href = a_tag.get("href")
             link = urljoin(base_url, href)
 
-            print(f"🟢 Titolo: {title}")
-            print(f"🔗 Link: {link}\n")
+            print(f" Titolo: {title}")
+            print(f" Link: {link}\n")
 
             pubdate = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S GMT")
 
@@ -84,14 +85,13 @@ def genera_feed_gambellara():
             valid_count += 1
 
         if valid_count > 0:
-            fg.rss_file("gambellara.xml")
-            print(f"✅ Feed generato → gambellara.xml con {valid_count} articoli")
+            fg.rss_file("monteviale.xml")
+            print(f" Feed generato : monteviale.xml con {valid_count} articoli")
         else:
-            print("⚠️ Nessun elemento valido trovato per il feed.")
+            print(" Nessun elemento valido trovato per il feed.")
 
     except Exception as e:
-        print(f"❌ Errore feed Gambellara: {e}")
-
+        print(f" Errore feed Monteviale: {e}")
 
 if __name__ == "__main__":
-    genera_feed_gambellara()
+       generate_feed()

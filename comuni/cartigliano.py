@@ -8,14 +8,14 @@ from playwright.sync_api import sync_playwright
 import time
 import traceback   #per il traeback esteso
 
-def genera_feed_cartigliano():
-    print("\n➡️ Inizio generazione feed per Comune di Cartigliano (da /home/novita.html)")
+def generate_feed():
+    print(" Inizio generazione feed per Comune di Cartigliano (da /home/novita.html)")
 
     try:
         url = "https://www.comune.cartigliano.vi.it/home/novita.html"
         base_url = "https://www.comune.cartigliano.vi.it"
 
-        print("🌐 Apro browser Playwright...")
+        print(" Apro browser Playwright...")
 
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True, args=["--disable-blink-features=AutomationControlled"])
@@ -26,31 +26,31 @@ def genera_feed_cartigliano():
             )
             context.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
             page = context.new_page()
-            print(f"🔗 Navigo verso {url}")
+            print(f" Navigo verso {url}")
             page.goto(url, timeout=60000)
 
             try:
                 page.locator("button:has-text('Accetta')").click()
-                print("✅ Cookie banner accettato")
+                print(" Cookie banner accettato")
                 time.sleep(1)
             except:
-                print("ℹ️ Nessun cookie banner da accettare")
+                print(" Nessun cookie banner da accettare")
 
-            print("⏳ Attendo caricamento completo della pagina...")
+            print(" Attendo caricamento completo della pagina...")
             page.wait_for_load_state("networkidle")
             time.sleep(3)
             html = page.content()
 
-            print("📄 HTML caricato correttamente")
+            print(" HTML caricato correttamente")
             with open("rendered_CARTIGLIANO.html", "w", encoding="utf-8") as f:
                 f.write(html)
 
             browser.close()
-            print("🛑 Browser chiuso")
+            print(" Browser chiuso")
 
         soup = BeautifulSoup(html, "lxml")
         cards = soup.select("div.card-wrapper")
-        print(f"🔎 Trovati {len(cards)} elementi con selector 'div.card-wrapper'\n")
+        print(f" Trovati {len(cards)} elementi con selector 'div.card-wrapper'\n")
 
         fg = FeedGenerator()
         fg.title("Comune di Cartigliano - Novità")
@@ -61,29 +61,29 @@ def genera_feed_cartigliano():
         titoli_visti = set()
 
         for i, card in enumerate(cards, start=1):
-            print(f"📆 Card {i}")
+            print(f" Card {i}")
             h3_tag = card.select_one("h3")
             a_tag = card.select_one("a[href]")
 
             if not a_tag or not h3_tag:
-                print("❌ Nessun <a> o <h3> trovato → scarto\n")
+                print(" Nessun <a> o <h3> trovato : scarto\n")
                 continue
 
             title = h3_tag.get_text(strip=True)
             if title.lower() in ["avvisi", "notizie", "comunicati"]:
-                print(f"⏭️ Escluso: {title}\n")
+                print(f" Escluso: {title}\n")
                 continue
 
             if title in titoli_visti:
-                print("🔁 Titolo già visto, salto\n")
+                print(" Titolo già visto, salto\n")
                 continue
             titoli_visti.add(title)
 
             href = a_tag.get("href")
             link = urljoin(base_url, href)
 
-            print(f"🟢 Titolo: {title}")
-            print(f"🔗 Link: {link}\n")
+            print(f" Titolo: {title}")
+            print(f" Link: {link}\n")
 
             pubdate = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S GMT")
 
@@ -97,14 +97,14 @@ def genera_feed_cartigliano():
 
         if valid_count > 0:
             fg.rss_file("cartigliano.xml")
-            print(f"✅ Feed generato → cartigliano.xml con {valid_count} articoli")
+            print(f" Feed generato : cartigliano.xml con {valid_count} articoli")
         else:
-            print("⚠️ Nessun elemento valido trovato per il feed.")
+            print(" Nessun elemento valido trovato per il feed.")
 
     except Exception as e:
-        print(f"❌ Errore feed Cartigliano: {e}")
+        print(f" Errore feed Cartigliano: {e}")
 def main():
-    genera_feed_cartigliano()
+    generate_feed()
  
 if __name__ == "__main__":
     main()

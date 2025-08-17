@@ -1,11 +1,12 @@
+
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 from datetime import datetime
 import requests
 
 
-def genera_feed_altissimo():
-    print("\n➡️ Inizio generazione feed per Comune di Altissimo (Home)")
+def generate_feed():
+    print("[INFO] Inizio generazione feed per Comune di Altissimo (Home)")
 
     try:
         response = requests.get("https://www.comune.altissimo.vi.it/home.html", timeout=20)
@@ -13,7 +14,7 @@ def genera_feed_altissimo():
         soup = BeautifulSoup(response.text, "lxml")
 
         cards = soup.select("div.card-wrapper.border.border-light.rounded.shadow-sm")
-        print(f"🔎 Trovati {len(cards)} elementi con struttura news")
+        print(f" Trovati {len(cards)} elementi con struttura news")
 
         fg = FeedGenerator()
         fg.title("Comune di Altissimo - Home")
@@ -39,14 +40,14 @@ def genera_feed_altissimo():
             fe.link(href=link)
             fe.pubDate(pub_date)
 
-            print(f"✅ Aggiunto: {title} → {link}")
+            print(f" Aggiunto: {title} - {link}")
 
         fg.rss_file("altissimo.xml")
-        print("✅ Feed generato correttamente per Comune di Altissimo → altissimo.xml")
+        print(" Feed generato correttamente per Comune di Altissimo - altissimo.xml")
 
     except Exception as e:
-        print(f"❌ Errore feed Altissimo: {e}")
+        print(f" Errore feed Altissimo: {e}")
 
 
 if __name__ == "__main__":
-    genera_feed_altissimo()
+    generate_feed()

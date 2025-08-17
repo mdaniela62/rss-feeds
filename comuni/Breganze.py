@@ -14,8 +14,8 @@ ESCLUDI_TITOLI = [
     "Numero di emergenza",
     "Albo pretorio"
 ]
-
-print("➡️ Inizio generazione feed per Comune di Breganze")
+def generate_feed():
+    print(" Inizio generazione feed per Comune di Breganze")
 
 try:
     response = requests.get(URL, timeout=TIMEOUT)
@@ -24,7 +24,7 @@ try:
 
     # Selettore CSS per le notizie
     items = soup.select("div.card-wrapper")
-    print(f"🔎 Trovati {len(items)} elementi con selector 'div.card-wrapper'")
+    print(f" Trovati {len(items)} elementi con selector 'div.card-wrapper'")
 
     fg = FeedGenerator()
     fg.title("Comune di Breganze - Novità")
@@ -42,7 +42,7 @@ try:
 
         # Filtra titoli non desiderati
         if any(keyword.lower() in title.lower() for keyword in ESCLUDI_TITOLI):
-            print(f"⏭️ Escluso: {title}")
+            print(f" Escluso: {title}")
             continue
 
         link = link_tag.get("href")
@@ -57,10 +57,14 @@ try:
         fe.link(href=link)
         fe.pubDate(pub_date)
 
-        print(f"✅ Aggiunto articolo: {title} → {link}")
+        print(f" Aggiunto articolo: {title} ; {link}")
 
     fg.rss_file("breganze.xml")
-    print("✅ Feed generato correttamente per Comune di Breganze")
+    print(" Feed generato correttamente per Comune di Breganze")
 
 except Exception as e:
-    print(f"❌ Errore durante la generazione del feed per Comune di Breganze: {e}")
+    print(f" Errore durante la generazione del feed per Comune di Breganze: {e}")
+
+if __name__ == "__main__":
+    generate_feed()
+

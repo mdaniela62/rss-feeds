@@ -1,7 +1,7 @@
 [
   {
-    "name": "Comune di Schio ",
-    "script": "schio",
+    "name": "Comune di Schio (Playwright)",
+    "script": "schio_playwright",
     "url": "https://www.comune.schio.vi.it/Novita",
     "output": "feeds/feed_schio.xml"
   },

@@ -8,7 +8,8 @@ URL = "https://www.comune.tezze.vi.it/home.html"
 
 TIMEOUT = 10
 
-print("➡️ Inizio generazione feed per Comune di Tezze")
+def generate_feed():
+    print(" Inizio generazione feed per Comune di Tezze")
 
 try:
     response = requests.get(URL, timeout=TIMEOUT)
@@ -17,7 +18,7 @@ try:
 
     # Selettore CSS per le notizie
     items = soup.select("div.card-wrapper")
-    print(f"🔎 Trovati {len(items)} elementi con selector 'div.card-wrapper'")
+    print(f" Trovati {len(items)} elementi con selector 'div.card-wrapper'")
 
     fg = FeedGenerator()
     fg.title("Comune di Tezze - Novità")
@@ -44,10 +45,15 @@ try:
         fe.link(href=link)
         fe.pubDate(pub_date)
 
-        print(f"✅ Aggiunto articolo: {title} → {link}")
+        print(f" Aggiunto articolo: {title} ; {link}")
 
     fg.rss_file("tezze.xml")
-    print("✅ Feed generato correttamente per Comune di Tezze")
+    print(" Feed generato correttamente per Comune di Tezze")
 
 except Exception as e:
-    print(f"❌ Errore durante la generazione del feed per Comune di Tezze: {e}")
+    print(f" Errore durante la generazione del feed per Comune di Tezze: {e}")
+
+if __name__ == "__main__":
+    generate_feed()
+
+

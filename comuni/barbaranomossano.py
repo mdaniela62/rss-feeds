@@ -7,8 +7,8 @@ from datetime import datetime
 URL = "https://www.comune.barbaranomossano.vi.it/home.html"
 
 TIMEOUT = 10
-
-print("➡️ Inizio generazione feed per Comune di Barbarano Mossano")
+def generate_feed():
+     print(" Inizio generazione feed per Comune di Barbarano Mossano")
 
 try:
     response = requests.get(URL, timeout=TIMEOUT)
@@ -17,7 +17,7 @@ try:
 
     # Selettore CSS per le notizie
     items = soup.select("div.card-wrapper")
-    print(f"🔎 Trovati {len(items)} elementi con selector 'div.card-wrapper'")
+    print(f" Trovati {len(items)} elementi con selector 'div.card-wrapper'")
 
     fg = FeedGenerator()
     fg.title("Comune di Barbarano Mossano - Novità")
@@ -44,10 +44,13 @@ try:
         fe.link(href=link)
         fe.pubDate(pub_date)
 
-        print(f"✅ Aggiunto articolo: {title} → {link}")
+        print(f" Aggiunto articolo: {title} : {link}")
 
     fg.rss_file("barbarano.xml")
-    print("✅ Feed generato correttamente per Comune di Barbarano Mossano")
+    print(" Feed generato correttamente per Comune di Barbarano Mossano")
 
 except Exception as e:
-    print(f"❌ Errore durante la generazione del feed per Comune di Barbarano Mossano: {e}")
+    print(f" Errore durante la generazione del feed per Comune di Barbarano Mossano: {e}")
+
+if __name__ == "__main__":
+    generate_feed()

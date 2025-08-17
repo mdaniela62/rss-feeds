@@ -21,27 +21,27 @@ def parse_italian_date(date_str):
     raise ValueError("Formato data non riconosciuto")
 
 
-def genera_feed():
+def generate_feed():
     url = "http://www.comune.malo.vi.it/web/malo"
-    print(f"🔎 Richiesta pagina: {url}", flush=True)
+    print(f" Richiesta pagina: {url}", flush=True)
 
     try:
         response = requests.get(url, timeout=20)
         response.raise_for_status()
-        print("✅ Pagina caricata correttamente", flush=True)
+        print(" Pagina caricata correttamente", flush=True)
     except Exception as e:
-        print(f"❌ Errore caricamento pagina: {e}", flush=True)
+        print(f" Errore caricamento pagina: {e}", flush=True)
         return
 
     soup = BeautifulSoup(response.content, "lxml")
 
     fg = FeedGenerator()
-    fg.title("Comune di Malo - Notizie")
+    fg.title("Comune di Malo : Notizie")
     fg.link(href=url, rel="alternate")
     fg.description("Ultime notizie dal sito ufficiale del Comune di Malo")
 
     items = soup.select("div.contenutoSezioneNews")
-    print(f"📄 Elementi trovati: {len(items)}", flush=True)
+    print(f" Elementi trovati: {len(items)}", flush=True)
 
     for idx, item in enumerate(items, start=1):
         title_tag = item.select_one("h3.underline a")
@@ -54,7 +54,7 @@ def genera_feed():
             if href and not href.startswith("http"):
                 href = requests.compat.urljoin(url, href)
 
-            print(f"  ✅ Articolo: {title_tag.get_text(strip=True)} → {href}", flush=True)
+       #     print(f" Articolo: {title_tag.get_text(strip=True)} , {href}", flush=True)
             fe = fg.add_entry()
             fe.title(title_tag.get_text(strip=True))
             fe.link(href=href)
@@ -68,14 +68,14 @@ def genera_feed():
                     pub_date = parse_italian_date(date_tag.get_text(strip=True))
                     fe.pubDate(format_datetime(pub_date))
                 except Exception as e:
-                    print(f"    ⚠️ Errore data '{date_tag.get_text(strip=True)}': {e}", flush=True)
+                    print(f"     Errore data '{date_tag.get_text(strip=True)}': {e}", flush=True)
 
     filename = "malo.xml"
     with open(filename, "wb") as f:
         f.write(fg.rss_str(pretty=True))
 
-    print(f"💾 Feed salvato in: {filename}", flush=True)
+    print(f" Feed salvato in: {filename}", flush=True)
 
 
 if __name__ == "__main__":
-    genera_feed()
+    generate_feed()
