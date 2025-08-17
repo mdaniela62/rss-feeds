@@ -47,7 +47,7 @@ try:
 
         print(f" Aggiunto articolo: {title} ; {link}")
 
-    fg.rss_file("tezze.xml")
+    fg.rss_file("feeds/tezze.xml")
     print(" Feed generato correttamente per Comune di Tezze")
 
 except Exception as e:

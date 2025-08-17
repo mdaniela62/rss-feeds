@@ -55,7 +55,7 @@ try:
 
         print(f" Aggiunto articolo: {title} : {link}")
 
-    fg.rss_file("schiavon.xml")
+    fg.rss_file("feeds/schiavon.xml")
     print(" Feed generato correttamente per Comune di Schiavon")
 
 except Exception as e:

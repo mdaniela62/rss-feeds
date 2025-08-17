@@ -46,7 +46,7 @@ try:
 
         print(f" Aggiunto articolo: {title} : {link}")
 
-    fg.rss_file("barbarano.xml")
+    fg.rss_file("feeds/barbarano.xml")
     print(" Feed generato correttamente per Comune di Barbarano Mossano")
 
 except Exception as e:

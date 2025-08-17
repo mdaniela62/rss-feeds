@@ -85,7 +85,7 @@ def generate_feed():
             valid_count += 1
 
         if valid_count > 0:
-            fg.rss_file("torrebelvicino.xml")
+            fg.rss_file("feeds/torrebelvicino.xml")
             print(f" Feed generato : torrebelvicino.xml con {valid_count} articoli")
         else:
             print(" Nessun elemento valido trovato per il feed.")

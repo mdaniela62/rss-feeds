@@ -70,7 +70,7 @@ def generate_feed():
                 except Exception as e:
                     print(f"     Errore data '{date_tag.get_text(strip=True)}': {e}", flush=True)
 
-    filename = "malo.xml"
+    filename = "feeds/malo.xml"
     with open(filename, "wb") as f:
         f.write(fg.rss_str(pretty=True))
 

@@ -33,8 +33,8 @@ def generate_feed():
             page.wait_for_load_state("networkidle")
             time.sleep(3)
             html = page.content()
-            with open("rendered_MONTEVIALE.html", "w", encoding="utf-8") as f:
-                 f.write(html)
+            #with open("rendered_MONTEVIALE.html", "w", encoding="utf-8") as f:
+            #     f.write(html)
             browser.close()
 
         soup = BeautifulSoup(html, "lxml")
@@ -85,7 +85,7 @@ def generate_feed():
             valid_count += 1
 
         if valid_count > 0:
-            fg.rss_file("monteviale.xml")
+            fg.rss_file("feeds/monteviale.xml")
             print(f" Feed generato : monteviale.xml con {valid_count} articoli")
         else:
             print(" Nessun elemento valido trovato per il feed.")

@@ -42,8 +42,8 @@ def generate_feed():
             html = page.content()
 
             print(" HTML caricato correttamente")
-            with open("rendered_CARTIGLIANO.html", "w", encoding="utf-8") as f:
-                f.write(html)
+            #with open("rendered_CARTIGLIANO.html", "w", encoding="utf-8") as f:
+            #    f.write(html)
 
             browser.close()
             print(" Browser chiuso")
@@ -96,7 +96,7 @@ def generate_feed():
             valid_count += 1
 
         if valid_count > 0:
-            fg.rss_file("cartigliano.xml")
+            fg.rss_file("feeds/cartigliano.xml")
             print(f" Feed generato : cartigliano.xml con {valid_count} articoli")
         else:
             print(" Nessun elemento valido trovato per il feed.")

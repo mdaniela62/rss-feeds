@@ -42,7 +42,7 @@ def generate_feed():
 
             print(f" Aggiunto: {title} - {link}")
 
-        fg.rss_file("altissimo.xml")
+        fg.rss_file("feeds/altissimo.xml")
         print(" Feed generato correttamente per Comune di Altissimo - altissimo.xml")
 
     except Exception as e:
