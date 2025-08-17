@@ -18,9 +18,9 @@ def get_items():
         # Accetta cookies se presenti
         try:
             page.click("button:has-text('Accetta')", timeout=5000)
-            print("✅ Cookies accettati")
+            print("[OK] Cookies accettati")
         except:
-            print("ℹ️ Nessun banner cookies trovato")
+            print("[INFO] Nessun banner cookies trovato")
 
         page.wait_for_timeout(3000)
 
@@ -70,7 +70,7 @@ def generate_feed():
     os.makedirs(os.path.dirname(SITE_INFO["output"]), exist_ok=True)
     tree = ET.ElementTree(rss)
     tree.write(SITE_INFO["output"], encoding="utf-8", xml_declaration=True)
-    print(f"✅ Feed generato: {SITE_INFO['output']}")
+    print(f"[OK] Feed generato: {SITE_INFO['output']}")
 
 if __name__ == "__main__":
     generate_feed()

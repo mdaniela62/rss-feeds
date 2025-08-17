@@ -1,0 +1,27 @@
+# Ignora cache e compilati Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignora pacchetti temporanei
+*.egg-info/
+build/
+dist/
+
+# Ignora file zip o archivi temporanei
+*.zip
+*.tar
+*.tar.gz
+
+# Ignora configurazioni locali
+*.log
+*.env
+
+# Mantieni la cartella feeds/ ma ignora i file temporanei al suo interno
+feeds/*
+!feeds/*.xml
+
+# Ignora cartelle nascoste di sistema
+.DS_Store
+Thumbs.db
