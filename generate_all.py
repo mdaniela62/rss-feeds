@@ -1,5 +1,11 @@
 import json
 import subprocess
+# debug #
+##import os, sys
+#print("Working dir:", os.getcwd())
+#print("Sys.path:", sys.path)
+#print("Files in comuni/:", os.listdir("comuni"))
+#fine debug#
 
 # Carica la lista dei siti
 with open("sites_list.json", "r", encoding="utf-8") as f:
