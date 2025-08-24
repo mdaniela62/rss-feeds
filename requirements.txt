@@ -1,4 +1,6 @@
-playwright
 requests
 beautifulsoup4
+feedgen
+feedgenerator
 lxml
+playwright

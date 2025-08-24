@@ -1,0 +1,36 @@
+name: Generate RSS Feeds
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 7 * * *"   # ogni giorno alle 7:00
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          playwright install --with-deps
+
+      - name: Generate feeds
+        run: python generate_all.py
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add feeds/*.xml || true
+          git commit -m "🔄 Update feeds [skip ci]" || echo "No changes to commit"
+          git push
