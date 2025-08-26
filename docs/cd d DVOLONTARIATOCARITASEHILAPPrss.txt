@@ -1,1 +1,13 @@
 cd /d "D:\VOLONTARIATO\CARITAS\EHILAPP\rss-feeds"
+
+Commit delle modifiche su GitHub:
+git status
+git commit -m "Fix: rinominati script comuni in minuscolo"
+git push
+Im caso di disallineamento:
+-su GitHub c’è già un commit più recente che tu non hai ancora scaricato in locale:git pull --rebase origin main
+git push
+- conflitti sui file: 
+git add <file>
+git rebase --continue
+git push
