@@ -4,9 +4,7 @@
     "script": "vallidelpasubio",
     "url": "https://www.comune.vallidelpasubio.vi.it/Novita",
     "output": "feeds/vallidelpasubio.xml"
-  }
-]
-[
+  },
   {
     "name": "Comune di Posina",
     "script": "posina",
