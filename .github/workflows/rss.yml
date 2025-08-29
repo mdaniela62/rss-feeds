@@ -1,4 +1,4 @@
-name: Generate RSS Feeds
+Generate RSS Feeds
 
 on:
   schedule:
@@ -10,16 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
+
       - name: Install dependencies
         run: |
           pip install playwright
           playwright install chromium
+
       - name: Generate feeds
         run: python generate_all.py
+
       - name: Commit and push
         run: |
           git config user.name "github-actions"
