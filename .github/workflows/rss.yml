@@ -1,12 +1,12 @@
-name: Generate RSS Feeds
+name: RSS Feed Generator
 
 on:
-  schedule:
-    - cron: "0 */6 * * *"
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  build:
+  generate:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,22 +16,19 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
-          pip install requests beautifulsoup4 feedgen feedgenerator playwright
-          playwright install chromium
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Generate feeds
-        run: python generate_all.py
-
-      - name: Commit and push updated feeds
+      - name: Run RSS generation script
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add feeds/*.xml
-          git commit -m "Update feeds [skip ci]" || echo "No changes to commit"
-          git push origin main
+          python generate_all.py
 
+      - name: Commit and push generated RSS files
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'Update RSS feeds'
+          file_pattern: 'feeds/*.xml'
