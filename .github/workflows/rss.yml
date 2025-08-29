@@ -1,5 +1,4 @@
 Generate RSS Feeds
-
 on:
   schedule:
     - cron: "0 */6 * * *"
