@@ -1,4 +1,4 @@
-Generate RSS Feeds
+name: Generate RSS Feeds
 on:
   schedule:
     - cron: "0 */6 * * *"
