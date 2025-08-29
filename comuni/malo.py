@@ -22,13 +22,14 @@ def parse_italian_date(date_str):
 
 
 def generate_feed():
+    print(" Inizio generazione feed per Comune di Malo")
     url = "http://www.comune.malo.vi.it/web/malo"
-    print(f" Richiesta pagina: {url}", flush=True)
+    #print(f" Richiesta pagina: {url}", flush=True)
 
     try:
         response = requests.get(url, timeout=20)
         response.raise_for_status()
-        print(" Pagina caricata correttamente", flush=True)
+        #print(" Pagina caricata correttamente", flush=True)
     except Exception as e:
         print(f" Errore caricamento pagina: {e}", flush=True)
         return

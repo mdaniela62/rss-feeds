@@ -40,7 +40,7 @@ def generate_feed():
             fe.link(href=link)
             fe.pubDate(pub_date)
 
-            print(f" Aggiunto: {title} - {link}")
+            #print(f" Aggiunto: {title} - {link}")
 
         fg.rss_file("feeds/altissimo.xml")
         print(" Feed generato correttamente per Comune di Altissimo - altissimo.xml")

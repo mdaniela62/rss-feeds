@@ -1,69 +1,79 @@
-import sys
-import os
-from datetime import datetime
-from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
+from datetime import datetime
+import xml.etree.ElementTree as ET
+import os
 
-# Aggiungo il path corretto per importare generate_rss
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from generate_rss import create_rss
-
-SITE_URL = "https://www.comune.vallidelpasubio.vi.it/Novita"
+SITE_INFO = {
+    "name": "Comune di Valli del Pasubio",
+    "url": "https://www.comune.vallidelpasubio.vi.it/Novita",
+    "output": "feeds/vallidelpasubio.xml"
+}
 
 def get_items():
-    items = []
+    print(" Inizio generazione feed per Comune di Valli del Pasubio")
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=True)
+        browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        page.goto(SITE_URL, timeout=60000)
+        page.goto(SITE_INFO["url"], timeout=60000)
 
-        # Aspetto che ci siano notizie caricate
-        page.wait_for_selector("div.card-body h3.card-title a.text-decoration-none", timeout=20000)
+        # Accetta cookies se presenti
+        try:
+            page.click("button:has-text('Accetta')", timeout=5000)
+            #print("[OK] Cookies accettati")
+        except:
+           # print("[INFO] Nessun banner cookies trovato")
+           pass
+        page.wait_for_timeout(3000)
 
-        html = page.content()
-        browser.close()
+        items = []
+        cards = page.query_selector_all("div.card-wrapper, div.card.card-teaser")
 
-    soup = BeautifulSoup(html, "html.parser")
+        print(f"Trovati {len(cards)} articoli.")
 
-    # Ogni notizia è dentro un div.card-body
-    for article in soup.select("div.card-body"):
-        title_tag = article.select_one("h3.card-title a.text-decoration-none")
-        if not title_tag:
-            continue
+        for card in cards:
+            title_elem = card.query_selector("h3.card-title")
+            link_elem = card.query_selector("a.read-more")
+            date_elem = card.query_selector("div:has-text('Data di pubblicazione')")
 
-        title = title_tag.get_text(strip=True)
-        link = title_tag.get("href")
-        if not link.startswith("http"):
-            link = "https://www.comune.vallidelpasubio.vi.it" + link
+            title = title_elem.inner_text().strip() if title_elem else "Senza titolo"
+            link = link_elem.get_attribute("href") if link_elem else SITE_INFO["url"]
+            date_str = date_elem.inner_text().replace("Data di pubblicazione:", "").strip() if date_elem else ""
 
-        # Data
-        date_tag = article.select_one("small.text-muted")
-        if date_tag:
             try:
-                pub_date = datetime.strptime(date_tag.get_text(strip=True), "%d/%m/%Y")
+                pub_date = datetime.strptime(date_str, "%d/%m/%Y").strftime("%a, %d %b %Y")
             except:
-                pub_date = datetime.now()
-        else:
-            pub_date = datetime.now()
+                pub_date = datetime.now().strftime("%a, %d %b %Y")
 
-        items.append({
-            "title": title,
-            "link": link,
-            "description": title,
-            "pub_date": pub_date,
-        })
+            items.append({
+                "title": title,
+                "link": link,
+                "pubDate": pub_date
+            })
 
-    return items
+        browser.close()
+        return items
 
 def generate_feed(site=None):
     items = get_items()
-    create_rss(
-        "Comune di Valli del Pasubio - Notizie",
-        SITE_URL,
-        "Ultime notizie dal sito del Comune di Valli del Pasubio",
-        items,
-        "vallidelpasubio.xml"
-    )
+
+    rss = ET.Element("rss", version="2.0")
+    channel = ET.SubElement(rss, "channel")
+
+    ET.SubElement(channel, "title").text = SITE_INFO["name"]
+    ET.SubElement(channel, "link").text = SITE_INFO["url"]
+    ET.SubElement(channel, "description").text = f"Ultime notizie da {SITE_INFO['name']}"
+    ET.SubElement(channel, "lastBuildDate").text = datetime.now().strftime("%a, %d %b %Y %H:%M:%S ")
+
+    for item in items:
+        item_elem = ET.SubElement(channel, "item")
+        ET.SubElement(item_elem, "title").text = item["title"]
+        ET.SubElement(item_elem, "link").text = item["link"]
+        ET.SubElement(item_elem, "pubDate").text = item["pubDate"]
+
+    os.makedirs(os.path.dirname(SITE_INFO["output"]), exist_ok=True)
+    tree = ET.ElementTree(rss)
+    tree.write(SITE_INFO["output"], encoding="utf-8", xml_declaration=True)
+    print(f"[OK] Feed generato: {SITE_INFO['output']}")
 
 if __name__ == "__main__":
     generate_feed()

@@ -10,6 +10,7 @@ SITE_INFO = {
 }
 
 def get_items():
+    print(" Inizio generazione feed per Comune di Schio")
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
@@ -18,10 +19,10 @@ def get_items():
         # Accetta cookies se presenti
         try:
             page.click("button:has-text('Accetta')", timeout=5000)
-            print("[OK] Cookies accettati")
+           # print("[OK] Cookies accettati")
         except:
-            print("[INFO] Nessun banner cookies trovato")
-
+            #print("[INFO] Nessun banner cookies trovato")
+            pass
         page.wait_for_timeout(3000)
 
         items = []
@@ -50,7 +51,7 @@ def get_items():
         browser.close()
         return items
 
-def generate_feed():
+def generate_feed(site=None):  #l'argomento era vuoto
     items = get_items()
 
     rss = ET.Element("rss", version="2.0")

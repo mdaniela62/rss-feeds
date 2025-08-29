@@ -45,7 +45,7 @@ try:
         fe.link(href=link)
         fe.pubDate(pub_date)
 
-        print(f" Aggiunto articolo: {title} ; {link}")
+        #print(f" Aggiunto articolo: {title} ; {link}")
 
     fg.rss_file("feeds/tezze.xml")
     print(" Feed generato correttamente per Comune di Tezze")

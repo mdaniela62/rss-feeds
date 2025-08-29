@@ -25,11 +25,11 @@ def generate_feed():
 
             try:
                 page.locator("button:has-text('Accetta')").click()
-                print(" Cookie banner accettato")
+                #print(" Cookie banner accettato")
                 time.sleep(1)
             except:
-                print(" Nessun cookie banner da accettare")
-
+                #print(" Nessun cookie banner da accettare")
+                pass
             page.wait_for_load_state("networkidle")
             time.sleep(3)
             html = page.content()
@@ -48,29 +48,29 @@ def generate_feed():
         titoli_visti = set()
 
         for i, card in enumerate(cards, start=1):
-            print(f" Card {i}")
+           #print(f" Card {i}")
             h3_tag = card.select_one("h3")
             a_tag = card.select_one("a[href]")
 
             if not a_tag or not h3_tag:
-                print(" Nessun <a> o <h3> trovato → scarto\n")
+                #print(" Nessun <a> o <h3> trovato → scarto\n")
                 continue
 
             title = h3_tag.get_text(strip=True)
             if title.lower() in ["avvisi", "notizie", "comunicati"]:
-                print(f" Escluso: {title}\n")
+                #print(f" Escluso: {title}\n")
                 continue
 
             if title in titoli_visti:
-                print(" Titolo già visto, salto\n")
+               #print(" Titolo già visto, salto\n")
                 continue
             titoli_visti.add(title)
 
             href = a_tag.get("href")
             link = urljoin(base_url, href)
 
-            print(f" Titolo: {title}")
-            print(f" Link: {link}\n")
+            #print(f" Titolo: {title}")
+            #print(f" Link: {link}\n")
 
             pubdate = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S GMT")
 

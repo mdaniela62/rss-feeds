@@ -38,7 +38,7 @@ try:
 
         # Filtra titoli non desiderati
         if any(keyword.lower() == title.lower() for keyword in ESCLUDI_TITOLI):
-            print(f" Escluso: {title}")
+            #print(f" Escluso: {title}")
             continue
 
         link = link_tag.get("href")
@@ -53,7 +53,7 @@ try:
         fe.link(href=link)
         fe.pubDate(pub_date)
 
-        print(f" Aggiunto articolo: {title} : {link}")
+        #print(f" Aggiunto articolo: {title} : {link}")
 
     fg.rss_file("feeds/schiavon.xml")
     print(" Feed generato correttamente per Comune di Schiavon")

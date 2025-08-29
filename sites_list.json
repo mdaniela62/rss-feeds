@@ -1,8 +1,8 @@
 [
-  {
+{
     "name": "Comune di Valli del Pasubio",
     "script": "vallidelpasubio",
-    "url": "https://www.comune.vallidelpasubio.vi.it/Novita",
+    "url": "https://www.comune.vallidelpasubio.it/Novita",
     "output": "feeds/vallidelpasubio.xml"
   },
   {
