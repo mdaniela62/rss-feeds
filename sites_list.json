@@ -1,5 +1,12 @@
 [
 {
+    "name": "Comune di Romano D'Ezzelino",
+    "script": "romano",
+    "url": "https://www.comune.romano.vi.it/Novita",
+    "output": "feeds/romano.xml"
+  },
+  
+  {
     "name": "Comune di Valli del Pasubio",
     "script": "vallidelpasubio",
     "url": "https://www.comune.vallidelpasubio.it/Novita",
@@ -96,5 +103,8 @@
     "output": "feeds/castelgomberto.xml"
   }
 ]
+
+
+
 
 
