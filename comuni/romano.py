@@ -27,11 +27,16 @@ def fetch_articles():
     data = r.json()
     articles = []
     for entity in data.get("page", {}).get("entities", []):
-        attr = entity.get("attributes", {})
+        attr = entity.get("attributes", {})    
         title = attr.get("sys_title", "")
-        link = "https://www.comune.romano.vi.it" + attr.get("sys_canonical_url", "")
+        slug = attr.get("sys_canonical_url") or ("/news/" + attr.get("sys_slug", ""))
+        link = "https://www.comune.romano.vi.it" + slug
         description = attr.get("sys_description", "")
         date_str = attr.get("sys_sottotitolo", "")
+        
+        # print per debug 
+        #print(f"Trovata notizia: {title} → {link}")
+
         try:
             pub_date = datetime.strptime(date_str, "%d %B %Y")
             pub_date = pub_date.replace(tzinfo=timezone.utc)
@@ -49,7 +54,7 @@ def generate_feed():
     articles = fetch_articles()
     rss = ET.Element("rss", version="2.0")
     channel = ET.SubElement(rss, "channel")
-    ET.SubElement(channel, "title").text = "Comune di Romano d'Ezzelino - Notizie PNRR"
+    ET.SubElement(channel, "title").text = "Comune di Romano d'Ezzelino - Notizie"
     ET.SubElement(channel, "link").text = "https://www.comune.romano.vi.it/home/novita"
     ET.SubElement(channel, "description").text = "Feed RSS simulato"
     
