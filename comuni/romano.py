@@ -42,12 +42,21 @@ def fetch_articles():
             pub_date = pub_date.replace(tzinfo=timezone.utc)
         except:
             pub_date = datetime.now(timezone.utc)
+
+      # Accorcia descrizione se troppo lunga
+        desc = description.strip()
+        max_len = 400
+        if len(desc) > max_len:
+            desc = desc[:max_len].rsplit(" ", 1)[0] + "..."
+
         articles.append({
             "title": title,
             "link": link,
-            "description": description,
+            "description": desc,
             "pubDate": pub_date.strftime("%a, %d %b %Y %H:%M:%S GMT")
         })
+
+
     return articles
 
 def generate_feed():
@@ -62,9 +71,14 @@ def generate_feed():
         item = ET.SubElement(channel, "item")
         ET.SubElement(item, "title").text = art["title"]
         ET.SubElement(item, "link").text = art["link"]
-        ET.SubElement(item, "description").text = art["description"]
+
+    # Aggiungiamo la descrizione con CDATA per mantenere l'HTML
+        desc = ET.SubElement(item, "description")
+        desc.text = f"<![CDATA[{art['description']}]]>"
+
         ET.SubElement(item, "pubDate").text = art["pubDate"]
-    
+
+        
     os.makedirs(os.path.dirname(FEED_FILE), exist_ok=True)
     tree = ET.ElementTree(rss)
     tree.write(FEED_FILE, encoding="utf-8", xml_declaration=True)
