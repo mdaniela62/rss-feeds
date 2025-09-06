@@ -1,83 +1,86 @@
-import requests
+# comuni/romano.py
+import asyncio
+from playwright.async_api import async_playwright
+from datetime import datetime
 import xml.etree.ElementTree as ET
-from datetime import datetime, timezone
-import os
 
-FEED_FILE = os.path.join("feeds", "romano.xml")
-URL_API = "https://www.comune.romano.vi.it/myportal/C_H512/api/content"
-PARAMS = {
-    "type": "pnrr_news",
-    "pageIndex": 1,
-    "onlyNotHidden": "true",
-    "parent": "/",
-    "includeSubFolders": "true",
-    "sortBy": "pubDate",
-    "desc": "true",
-    "pageSize": 20,
-    "excludedPnrrTaxonomiesFilter": "true"
-}
-HEADERS = {
-    "Accept": "application/json, text/plain, */*",
-    "User-Agent": "Mozilla/5.0"
-}
+FEED_FILE = "feeds/romano.xml"
+URL = "https://www.comune.romano.vi.it/home/novita.html"
 
-def fetch_articles():
-    r = requests.get(URL_API, params=PARAMS, headers=HEADERS)
-    r.raise_for_status()
-    data = r.json()
-    articles = []
-    for entity in data.get("page", {}).get("entities", []):
-        attr = entity.get("attributes", {})
-        title = attr.get("sys_title", "")
-        link = "https://www.comune.romano.vi.it" + attr.get("sys_canonical_url", "")
-        description = attr.get("sys_description", "")
+async def fetch_news():
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(
+            headless=True,  # rimane headless ma “camuffato”
+            args=[
+                "--disable-blink-features=AutomationControlled",
+                "--no-sandbox",
+                "--disable-gpu"
+            ]
+        )
+        context = await browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                       "AppleWebKit/537.36 (KHTML, like Gecko) "
+                       "Chrome/128.0.0.0 Safari/537.36",
+            viewport={"width": 1366, "height": 768}
+        )
+        page = await context.new_page()
+        await page.goto(URL, timeout=60000)
+        await page.wait_for_selector("div.col-md-6.col-xl-4", timeout=60000)
 
-        # accorcia la descrizione troppo lunga
-        if len(description) > 500:
-            description = description[:500] + "..."
+        blocks = await page.query_selector_all("div.col-md-6.col-xl-4")
+        news_items = []
 
-        date_str = attr.get("sys_sottotitolo", "")
-        try:
-            pub_date = datetime.strptime(date_str, "%d %B %Y")
-            pub_date = pub_date.replace(tzinfo=timezone.utc)
-        except:
-            pub_date = datetime.now(timezone.utc)
+        for block in blocks[:5]:  # solo le prime 5 notizie
+            title_el = await block.query_selector("h3")
+            date_el = await block.query_selector("span.fw-normal")
+            link_el = await block.query_selector("a")
 
-        articles.append({
-            "title": title,
-            "link": link,
-            "description": description,
-            "pubDate": pub_date.strftime("%a, %d %b %Y %H:%M:%S GMT")
-        })
-    return articles
+            title = (await title_el.inner_text()) if title_el else "Senza titolo"
+            date_text = (await date_el.inner_text()) if date_el else ""
+            link = (await link_el.get_attribute("href")) if link_el else "#"
 
+            if link and link.startswith("/"):
+                link = "https://www.comune.romano.vi.it" + link
 
-def generate_feed():
-    articles = fetch_articles()
+            pub_date = None
+            if date_text:
+                try:
+                    pub_date = datetime.strptime(date_text, "%d %b %Y")
+                except:
+                    pub_date = datetime.now()
 
+            news_items.append({
+                "title": title.strip(),
+                "link": link.strip(),
+                "date": pub_date or datetime.now()
+            })
+
+        await browser.close()
+        return news_items
+
+def generate_rss(news_items):
     rss = ET.Element("rss", version="2.0")
     channel = ET.SubElement(rss, "channel")
-    ET.SubElement(channel, "title").text = "Comune di Romano d'Ezzelino - Notizie"
-    ET.SubElement(channel, "link").text = "https://www.comune.romano.vi.it/home/novita"
-    ET.SubElement(channel, "description").text = "Feed RSS simulato"
 
-    for art in articles:
-        item = ET.SubElement(channel, "item")
-        ET.SubElement(item, "title").text = art["title"]
-        ET.SubElement(item, "link").text = art["link"]
+    ET.SubElement(channel, "title").text = "Comune di Romano d’Ezzelino - Notizie"
+    ET.SubElement(channel, "link").text = URL
+    ET.SubElement(channel, "description").text = "Ultime notizie dal sito ufficiale del Comune di Romano d’Ezzelino"
+    ET.SubElement(channel, "language").text = "it"
 
-        # Wrappa la descrizione in CDATA
-        desc_elem = ET.SubElement(item, "description")
-        desc_elem.text = f"<![CDATA[{art['description']}]]>"
+    for item in news_items:
+        entry = ET.SubElement(channel, "item")
+        ET.SubElement(entry, "title").text = item["title"]
+        ET.SubElement(entry, "link").text = item["link"]
+        ET.SubElement(entry, "pubDate").text = item["date"].strftime("%a, %d %b %Y %H:%M:%S GMT")
 
-        ET.SubElement(item, "pubDate").text = art["pubDate"]
-
-    os.makedirs(os.path.dirname(FEED_FILE), exist_ok=True)
     tree = ET.ElementTree(rss)
     tree.write(FEED_FILE, encoding="utf-8", xml_declaration=True)
 
+async def main():
+    news = await fetch_news()
+    generate_rss(news)
+    print(f"✅ Feed generato con {len(news)} notizie (max 5).")
 
 if __name__ == "__main__":
-    print("Inizio generazione feed per Comune di Romano d'Ezzelino")
-    generate_feed()
-    print(f"Feed generato correttamente: {FEED_FILE}")
+    asyncio.run(main())
+
