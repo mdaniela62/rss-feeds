@@ -3,6 +3,7 @@ import asyncio
 from playwright.async_api import async_playwright
 from datetime import datetime
 import xml.etree.ElementTree as ET
+import io
 
 FEED_FILE = "feeds/romano.xml"
 URL = "https://www.comune.romano.vi.it/home/novita.html"
@@ -10,7 +11,7 @@ URL = "https://www.comune.romano.vi.it/home/novita.html"
 async def fetch_news():
     async with async_playwright() as p:
         browser = await p.chromium.launch(
-            headless=True,  # rimane headless ma “camuffato”
+            headless=True,
             args=[
                 "--disable-blink-features=AutomationControlled",
                 "--no-sandbox",
@@ -58,7 +59,13 @@ async def fetch_news():
         await browser.close()
         return news_items
 
-def generate_rss(news_items):
+def generate_feed(site=None):
+    """
+    Funzione standard per essere chiamata da generate_all.py.
+    Restituisce il contenuto XML del feed come stringa.
+    """
+    news_items = asyncio.run(fetch_news())
+
     rss = ET.Element("rss", version="2.0")
     channel = ET.SubElement(rss, "channel")
 
@@ -73,14 +80,15 @@ def generate_rss(news_items):
         ET.SubElement(entry, "link").text = item["link"]
         ET.SubElement(entry, "pubDate").text = item["date"].strftime("%a, %d %b %Y %H:%M:%S GMT")
 
+    # scrive il file locale
     tree = ET.ElementTree(rss)
     tree.write(FEED_FILE, encoding="utf-8", xml_declaration=True)
 
-async def main():
-    news = await fetch_news()
-    generate_rss(news)
-    print(f"✅ Feed generato con {len(news)} notizie (max 5).")
+    # restituisce il contenuto XML come stringa
+    output = io.BytesIO()
+    tree.write(output, encoding="utf-8", xml_declaration=True)
+    return output.getvalue().decode("utf-8")
 
 if __name__ == "__main__":
-    asyncio.run(main())
-
+    content = generate_feed()
+    print(f"✅ Feed generato con {content.count('<item>')} notizie (max 5).")
