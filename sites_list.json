@@ -1,8 +1,22 @@
 [
-{
+
+  {
+    "name": "Comune di Monticello Conte Otto",
+    "script": "monticello",
+    "url": "https://www.comune.monticello.vi.it/novita",
+    "output": "feeds/monticello.xml"
+  },
+  {
+    "name": "Comune di Thiene",
+    "script": "thiene",
+    "url": "https://www.comune.thiene.vi.it/novita",
+    "output": "feeds/thiene.xml"
+  },
+
+  {
     "name": "Comune di Romano D'Ezzelino",
     "script": "romano",
-    "url": "https://www.comune.romano.vi.it/Novita",
+    "url": "https://www.comune.romano.vi.it/novita",
     "output": "feeds/romano.xml"
   },
   
