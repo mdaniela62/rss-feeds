@@ -1,6 +1,12 @@
 [
 
   {
+    "name": "Comune di Grisignano di Zocco",
+    "script": "grisignano",
+    "url": "https://www.comune.grisignano.vi.it/novita",
+    "output": "feeds/grisignano.xml"
+  },
+  {
     "name": "Comune di Monticello Conte Otto",
     "script": "monticello",
     "url": "https://www.comune.monticello.vi.it/novita",

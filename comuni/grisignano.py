@@ -4,8 +4,8 @@ from datetime import datetime
 import xml.etree.ElementTree as ET
 import io
 
-FEED_FILE = "feeds/monticello.xml"
-URL = "https://www.comune.monticello.vi.it/home/novita"
+FEED_FILE = "feeds/grisignano.xml"
+URL = "https://www.comune.grisignano.vi.it/home/novita"
 
 async def fetch_news():
     async with async_playwright() as p:
@@ -39,7 +39,7 @@ async def fetch_news():
             link = (await link_el.get_attribute("href")) if link_el else "#"
 
             if link and link.startswith("/"):
-                link = "https://www.comune.monticello.vi.it" + link
+                link = "https://www.comune.grisignano.vi.it" + link
 
             pub_date = None
             if date_text:
@@ -62,7 +62,7 @@ async def fetch_news():
                 img_src = await img_el.get_attribute("src")
                 #print(f"🖼️ Immagine trovata: {img_src}")
                 if img_src and img_src.startswith("/"):
-                    img_src = "https://www.comune.monticello.vi.it" + img_src
+                    img_src = "https://www.comune.grisignano.vi.it" + img_src
 
             ####################################
 
@@ -83,9 +83,9 @@ def generate_feed(site=None):
     rss = ET.Element("rss", version="2.0")
     channel = ET.SubElement(rss, "channel")
 
-    ET.SubElement(channel, "title").text = "Comune di Monticello - Notizie"
+    ET.SubElement(channel, "title").text = "Comune di Grisignano - Notizie"
     ET.SubElement(channel, "link").text = URL
-    ET.SubElement(channel, "description").text = "Ultime notizie dal sito ufficiale del Comune di Monticello"
+    ET.SubElement(channel, "description").text = "Ultime notizie dal sito ufficiale del Comune di Grisignano"
     ET.SubElement(channel, "language").text = "it"
 
     for item in news_items:
