@@ -60,7 +60,7 @@ async def fetch_news():
             img_src = None
             if img_el:
                 img_src = await img_el.get_attribute("src")
-                #print(f"🖼️ Immagine trovata: {img_src}")
+                #pythonprint(f"🖼️ Immagine trovata: {img_src}")
                 if img_src and img_src.startswith("/"):
                     img_src = "https://www.comune.monticello.vi.it" + img_src
 

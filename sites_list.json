@@ -1,6 +1,24 @@
 [
 
   {
+    "name": "Comune di Bassano",
+    "script": "bassano",
+    "url": "https://www.comune.bassano.vi.it/novita",
+    "output": "feeds/bassano.xml"
+  },
+  {
+    "name": "Comune di Costabissara",
+    "script": "costabissara",
+    "url": "https://www.comune.costabissara.vi.it/novita",
+    "output": "feeds/costabissara.xml"
+  },
+  {
+    "name": "Comune di Bressanvido",
+    "script": "bressanvido",
+    "url": "https://www.comune.bressanvido.vi.it/tuttenotizie",
+    "output": "feeds/bressanvido.xml"
+  },
+  {
     "name": "Comune di Grisignano di Zocco",
     "script": "grisignano",
     "url": "https://www.comune.grisignano.vi.it/novita",

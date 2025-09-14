@@ -25,7 +25,7 @@ async def fetch_news():
         print(f"🔢 Trovati {len(blocks)} blocchi")
         news_items = []
 
-        for block in blocks[:5]:
+        for block in blocks[:10]:
             html = await block.inner_html()
             #print(f"\n🔍 HTML del blocco:\n{html}\n")
 
@@ -85,7 +85,7 @@ def generate_feed(site=None):
 
     ET.SubElement(channel, "title").text = "Comune di thiene - Notizie"
     ET.SubElement(channel, "link").text = URL
-    ET.SubElement(channel, "description").text = "Ultime notizie dal sito ufficiale del Comune di thiene"
+    ET.SubElement(channel, "description").text = "Ultime notizie dal sito ufficiale del Comune di Thiene"
     ET.SubElement(channel, "language").text = "it"
 
     for item in news_items:
@@ -108,4 +108,4 @@ def generate_feed(site=None):
 
 if __name__ == "__main__":
     content = generate_feed()
-    print(f"✅ Feed generato con {content.count('<item>')} notizie (max 5).")
+    print(f"✅ Feed generato con {content.count('<item>')} notizie (max 10).")
