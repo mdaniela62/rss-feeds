@@ -38,6 +38,10 @@ async def fetch_news():
             link_el = await block.query_selector("a")
 
             title = (await title_el.inner_text()) if title_el else "Senza titolo"
+            if title.lower() in ["avvisi", "notizie", "comunicati"]:
+                #print(f" Escluso: {title}\n")
+                continue
+
             date_text = (await date_el.inner_text()) if date_el else ""
             link = (await link_el.get_attribute("href")) if link_el else "#"
 
