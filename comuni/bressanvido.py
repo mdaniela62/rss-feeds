@@ -59,11 +59,12 @@ async def fetch_news():
                 #print(f"📝 Descrizione trovata: {description}")
 
             # Immagine corretta
-            img_el = await block.query_selector("img.src")
+            img_el = await block.query_selector("img.card-image-style")
+            print(f"🖼️ Immagine trovata: {img_el}")
             img_src = None
             if img_el:
                 img_src = await img_el.get_attribute("src")
-                #print(f"🖼️ Immagine trovata: {img_src}")
+                print(f"🖼️ Immagine trovata: {img_src}")
                 if img_src and img_src.startswith("/"):
                     img_src = "https://www.comune.bressanvido.vi.it" + img_src
 
