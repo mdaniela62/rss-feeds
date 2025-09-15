@@ -1,6 +1,12 @@
 [
 
   {
+    "name": "Comune di Valdagno",
+    "script": "valdagno",
+    "url": "https://www.comune.valdagno.vi.it/novita",
+    "output": "feeds/valdagno.xml"
+  },
+  {
     "name": "Comune di Bassano",
     "script": "bassano",
     "url": "https://www.comune.bassano.vi.it/novita",
