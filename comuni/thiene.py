@@ -56,7 +56,7 @@ async def fetch_news():
                 #print(f"📝 Descrizione trovata: {description}")
 
             # Immagine corretta
-            img_el = await block.query_selector("img.img-responsive")
+            img_el = await block.query_selector("img.src")
             img_src = None
             if img_el:
                 img_src = await img_el.get_attribute("src")
