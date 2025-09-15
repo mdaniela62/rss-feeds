@@ -24,7 +24,7 @@ async def fetch_news():
         await page.wait_for_load_state('networkidle') 
         await asyncio.sleep(2)
 
-        blocks = await page.query_selector_all("div.col-md-6.col-xl-4")
+        blocks = await page.query_selector_all("div.col-lg-4")
         print(f"🔢 Trovati {len(blocks)} blocchi")
         news_items = []
 
@@ -33,8 +33,8 @@ async def fetch_news():
             #print(f"\n🔍 HTML del blocco:\n{html}\n")
 
 
-            title_el = await block.query_selector("h3")
-            date_el = await block.query_selector("span.fw-normal")
+            title_el = await block.query_selector("div.h3")
+            date_el = await block.query_selector("span.secondary-grey-text")
             link_el = await block.query_selector("a")
 
             title = (await title_el.inner_text()) if title_el else "Senza titolo"
@@ -52,14 +52,14 @@ async def fetch_news():
                     pub_date = datetime.now()
 
             # Descrizione corretta
-            desc_el = await block.query_selector("p.card-text div")
+            desc_el = await block.query_selector("div")
             description = ""
             if desc_el:
                 description = await desc_el.inner_text()
                 #print(f"📝 Descrizione trovata: {description}")
 
             # Immagine corretta
-            img_el = await block.query_selector("img.img-responsive")
+            img_el = await block.query_selector("img.src")
             img_src = None
             if img_el:
                 img_src = await img_el.get_attribute("src")
