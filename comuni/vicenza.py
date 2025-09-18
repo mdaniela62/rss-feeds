@@ -30,7 +30,7 @@ async def fetch_news():
 
         for block in blocks[:10]:
             html = await block.inner_html()
-            #print(f"\n🔍 HTML del blocco:\n{html}\n")
+            ##print(f"\n🔍 HTML del blocco:\n{html}\n")
 
 
             title_el = await block.query_selector("h3")

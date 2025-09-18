@@ -1,7 +1,7 @@
 [
 
   {
-    "name": "Comune di Vicenza",
+    "name": "Comune di Vicenza",    
     "script": "vicenza",
     "url": "https://www.comune.vicenza.it/Novita",
     "output": "feeds/vicenza.xml"
