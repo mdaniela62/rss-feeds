@@ -52,7 +52,7 @@ async def fetch_news():
                     pub_date = datetime.now()
 
             # Descrizione corretta
-            desc_el = await block.query_selector("p.card-text div")
+            desc_el = await block.query_selector("div.card-text div")
             description = ""
             if desc_el:
                 description = await desc_el.inner_text()

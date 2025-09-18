@@ -1,6 +1,12 @@
 [
 
   {
+    "name": "Comune di Santorso",    
+    "script": "santorso",
+    "url": "https://www.comune.santorso.vi.it/Novita",
+    "output": "feeds/santorso.xml"
+  },
+  {
     "name": "Comune di Vicenza",    
     "script": "vicenza",
     "url": "https://www.comune.vicenza.it/Novita",
