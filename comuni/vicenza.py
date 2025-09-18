@@ -1,5 +1,5 @@
-###  Sostituisci valdagno con il nome del Comune ###
-###  Comune di valdagno
+###  Sostituisci vicenza con il nome del Comune ###
+###  Comune di vicenza
 
 import asyncio
 from playwright.async_api import async_playwright
@@ -7,8 +7,8 @@ from datetime import datetime
 import xml.etree.ElementTree as ET
 import io
 
-FEED_FILE = "feeds/valdagno.xml"
-URL = "https://www.comune.valdagno.vi.it/home/novita"
+FEED_FILE = "feeds/vicenza.xml"
+URL = "https://www.comune.vicenza.it/Novita"
 
 async def fetch_news():
     async with async_playwright() as p:
@@ -24,7 +24,7 @@ async def fetch_news():
         await page.wait_for_load_state('networkidle') 
         await asyncio.sleep(2)
 
-        blocks = await page.query_selector_all("div.col-md-6.col-xl-4")
+        blocks = await page.query_selector_all("div.col-4.order-2")
         print(f"🔢 Trovati {len(blocks)} blocchi")
         news_items = []
 
@@ -47,7 +47,7 @@ async def fetch_news():
             link = (await link_el.get_attribute("href")) if link_el else "#"
 
             if link and link.startswith("/"):
-                link = "https://www.comune.valdagno.vi.it" + link
+                link = "https://www.comune.vicenza.it" + link
 
             pub_date = None
             if date_text:
@@ -70,7 +70,7 @@ async def fetch_news():
                 img_src = await img_el.get_attribute("src")
                 #print(f"🖼️ Immagine trovata: {img_src}")
                 if img_src and img_src.startswith("/"):
-                    img_src = "https://www.comune.valdagno.vi.it" + img_src
+                    img_src = "https://www.comune.vicenza.it" + img_src
 
             ####################################
 
@@ -91,9 +91,9 @@ def generate_feed(site=None):
     rss = ET.Element("rss", version="2.0")
     channel = ET.SubElement(rss, "channel")
 
-    ET.SubElement(channel, "title").text = "Comune di valdagno - Notizie"
+    ET.SubElement(channel, "title").text = "Comune di Vicenza - Notizie"
     ET.SubElement(channel, "link").text = URL
-    ET.SubElement(channel, "description").text = "Ultime notizie dal sito ufficiale del Comune di valdagno"
+    ET.SubElement(channel, "description").text = "Ultime notizie dal sito ufficiale del Comune di Vicenza"
     ET.SubElement(channel, "language").text = "it"
 
     for item in news_items:

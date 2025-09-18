@@ -1,6 +1,18 @@
 [
 
   {
+    "name": "Comune di Vicenza",
+    "script": "vicenza",
+    "url": "https://www.comune.vicenza.it/Novita",
+    "output": "feeds/vicenza.xml"
+  },
+  {
+    "name": "Comune di Villaga",
+    "script": "villaga",
+    "url": "https://www.comune.villaga.vi.it/novita",
+    "output": "feeds/villaga.xml"
+  },
+  {
     "name": "Comune di Valdagno",
     "script": "valdagno",
     "url": "https://www.comune.valdagno.vi.it/novita",
