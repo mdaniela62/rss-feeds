@@ -6,7 +6,7 @@
     <description>Ultime notizie dal sito ufficiale del Comune di Malo</description>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-feedgen</generator>
-    <lastBuildDate>Fri, 19 Sep 2025 06:15:56 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 19 Sep 2025 10:50:33 +0000</lastBuildDate>
     <item>
       <title>Buono Libri - Anno Scolastico - Formativo 2025/26scadenza 17 ottobre 2025 ore 14:00</title>
       <link>http://www.comune.malo.vi.it/web/malo/vivere/vivere-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_nc6A&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=2ca52f47-9aac-49f2-804c-ae58f3a76c51&amp;lang=it&amp;contentArea=_Malo_vivere-interna_Body1_</link>
@@ -57,13 +57,6 @@
       <pubDate>Thu, 18 Sep 2025 00:00:00 +0000</pubDate>
     </item>
     <item>
-      <title>Malo verde: un tesoro quotidiano da vivere e conoscereLe slide delle due serate</title>
-      <link>http://www.comune.malo.vi.it/web/malo/servizi/servizi-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_l6Hb&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/html-generico-detail&amp;uuid=047acc77-cf05-4f58-a9d5-6c9050bab5b1&amp;contentArea=_Malo_servizi-interna_Body1_&amp;selVert=menu-contestuale_8af43df1-7db4-4d18-bda8-4c93bac676cc</link>
-      <description>Le slide delle due serate</description>
-      <guid isPermaLink="true">http://www.comune.malo.vi.it/web/malo/servizi/servizi-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_l6Hb&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/html-generico-detail&amp;uuid=047acc77-cf05-4f58-a9d5-6c9050bab5b1&amp;contentArea=_Malo_servizi-interna_Body1_&amp;selVert=menu-contestuale_8af43df1-7db4-4d18-bda8-4c93bac676cc</guid>
-      <pubDate>Wed, 28 May 2025 00:00:00 +0000</pubDate>
-    </item>
-    <item>
       <title>Fondo donazioni alluvioni del maggio 2024. Domanda di contributo a copertura delle maggiori spese di carburante sostenute a seguito del crollo del Ponte delle GallineTermine presentazione domanda 30 settembre 2025</title>
       <link>http://www.comune.malo.vi.it/web/malo/servizi/servizi-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_l6Hb&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=3a5ee4ff-e629-44c6-b275-6de6def094fb&amp;lang=it&amp;contentArea=_Malo_servizi-interna_Body1_</link>
       <description>Termine presentazione domanda 30 settembre 2025</description>
@@ -90,6 +83,13 @@
       <description>Domenica 21 settembre 2025 - AVVISO</description>
       <guid isPermaLink="true">http://www.comune.malo.vi.it/web/malo/vivere/vivere-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_nc6A&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/eventi-detail&amp;uuid=e078a5f8-f46b-4229-9952-f1d7a619cb5f&amp;lang=it&amp;contentArea=_Malo_vivere-interna_Body1_</guid>
       <pubDate>Wed, 17 Sep 2025 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>OLTRE il dolore, OLTRE la perdita. Condividere per trovare conforto e sostegno7 incontri a partire dal 25 settembre</title>
+      <link>http://www.comune.malo.vi.it/web/malo/area-istituzionale/area-istituzionale-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_Yl0I&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=e3f99a16-0369-4bb9-ab97-396afcd3ec13&amp;lang=it&amp;contentArea=_Malo_area-istituzionale-interna_Body1_</link>
+      <description>7 incontri a partire dal 25 settembre</description>
+      <guid isPermaLink="true">http://www.comune.malo.vi.it/web/malo/area-istituzionale/area-istituzionale-interna?p_p_id=ALFRESCO_MYPORTAL_CONTENT_PROXY_WAR_myportalportlet_INSTANCE_Yl0I&amp;p_p_lifecycle=1&amp;p_p_state=normal&amp;p_p_mode=view&amp;template=/regioneveneto/myportal/myportal-news-detail&amp;uuid=e3f99a16-0369-4bb9-ab97-396afcd3ec13&amp;lang=it&amp;contentArea=_Malo_area-istituzionale-interna_Body1_</guid>
+      <pubDate>Fri, 19 Sep 2025 00:00:00 +0000</pubDate>
     </item>
   </channel>
 </rss>
