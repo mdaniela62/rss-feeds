@@ -1,6 +1,18 @@
 [
 
   {
+    "name": "Comune di Orgiano",    
+    "script": "orgiano",
+    "url": "https://www.comune.orgiano.vi.it/it/menu/news",
+    "output": "feeds/orgiano.xml"
+  },
+  {
+    "name": "Comune di Villaverla",    
+    "script": "villaverla",
+    "url": "https://www.comune.villaverla.vi.it/Novita",
+    "output": "feeds/villaverla.xml"
+  },
+  {
     "name": "Comune di Santorso",    
     "script": "santorso",
     "url": "https://www.comune.santorso.vi.it/Novita",
