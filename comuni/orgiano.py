@@ -37,7 +37,7 @@ async def fetch_news():
 
             title_el = await block.query_selector("h1")
             date_el = await block.query_selector("span.fw-normal")
-            link_el = await block.query_selector("a")
+            link_el = await block.query_selector("a.read-more")
 
             
             title = (await title_el.inner_text()) if title_el else "Senza titolo"
