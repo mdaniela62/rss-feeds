@@ -1,5 +1,5 @@
-###  Sostituisci vallidelpasubio con il nome del Comune ###
-###  Comune di vallidelpasubio
+###  Sostituisci nanto con il nome del Comune ###
+###  Comune di nanto
 
 import asyncio
 from playwright.async_api import async_playwright
@@ -7,8 +7,8 @@ from datetime import datetime
 import xml.etree.ElementTree as ET
 import io
 
-FEED_FILE = "feeds/vallidelpasubio.xml"
-URL = "https://www.comune.vallidelpasubio.vi.it/Novita"
+FEED_FILE = "feeds/nanto.xml"
+URL = "https://www.comune.nanto.vi.it/home"
 
 async def fetch_news():
     async with async_playwright() as p:
@@ -24,7 +24,7 @@ async def fetch_news():
         await page.wait_for_load_state('networkidle') 
         await asyncio.sleep(2)
 
-        blocks = await page.query_selector_all("div.px-3.pb-3")
+        blocks = await page.query_selector_all("div.col-lg-6.col-xl-4")
         print(f"🔢 Trovati {len(blocks)} blocchi")
         news_items = []
 
@@ -47,7 +47,7 @@ async def fetch_news():
             link = (await link_el.get_attribute("href")) if link_el else "#"
 
             if link and link.startswith("/"):
-                link = "https://www.comune.vallidelpasubio.vi.it" + link
+                link = "https://www.comune.nanto.vi.it" + link
 
             pub_date = None
             if date_text:
@@ -57,20 +57,20 @@ async def fetch_news():
                     pub_date = datetime.now()
 
             # Descrizione corretta
-            desc_el = await block.query_selector("p.card-text div")
+            desc_el = await block.query_selector("p.cmp-list-card-img__body-description div")
             description = ""
             if desc_el:
                 description = await desc_el.inner_text()
                 #print(f"📝 Descrizione trovata: {description}")
 
             # Immagine corretta
-            img_el = await block.query_selector("img.img-responsive")
+            img_el = await block.query_selector("figure.img-wrapper img")
             img_src = None
             if img_el:
                 img_src = await img_el.get_attribute("src")
                 #print(f"🖼️ Immagine trovata: {img_src}")
                 if img_src and img_src.startswith("/"):
-                    img_src = "https://www.comune.vallidelpasubio.vi.it" + img_src
+                    img_src = "https://www.comune.nanto.vi.it" + img_src
 
             ####################################
 
@@ -91,9 +91,9 @@ def generate_feed(site=None):
     rss = ET.Element("rss", version="2.0")
     channel = ET.SubElement(rss, "channel")
 
-    ET.SubElement(channel, "title").text = "Comune di vallidelpasubio - Notizie"
+    ET.SubElement(channel, "title").text = "Comune di nanto - Notizie"
     ET.SubElement(channel, "link").text = URL
-    ET.SubElement(channel, "description").text = "Ultime notizie dal sito ufficiale del Comune di vallidelpasubio"
+    ET.SubElement(channel, "description").text = "Ultime notizie dal sito ufficiale del Comune di nanto"
     ET.SubElement(channel, "language").text = "it"
 
     for item in news_items:

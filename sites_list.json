@@ -1,6 +1,12 @@
 [
 
   {
+    "name": "Comune di nanto",    
+    "script": "nanto",
+    "url": "https://www.comune.nanto.vi.it/it/home/novita",
+    "output": "feeds/orgiano.xml"
+  },
+  {
     "name": "Comune di Orgiano",    
     "script": "orgiano",
     "url": "https://www.comune.orgiano.vi.it/it/menu/news",
