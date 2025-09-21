@@ -10,6 +10,21 @@ import io
 FEED_FILE = "feeds/orgiano.xml"
 URL = "https://www.comune.orgiano.vi.it/it/menu/news"
 
+from urllib.parse import urljoin
+
+def normalize_url(raw_url, base_url):
+    if not raw_url:
+        return None
+    raw_url = raw_url.strip()
+
+    if raw_url.startswith("http://") or raw_url.startswith("https://"):
+        return raw_url
+
+    if "municipiumapp.it" in raw_url or "cloudfront.net" in raw_url:
+        return "https://" + raw_url.lstrip("/")
+
+    return urljoin(base_url + "/", raw_url.lstrip("/"))
+
 async def fetch_news():
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
@@ -59,7 +74,7 @@ async def fetch_news():
                 except:
                     pub_date = datetime.now()
 
-            # Descrizione corretta
+            # Descrizione 
             desc_el = await block.query_selector("p.card-text")
             if not desc_el:
                 print("⚠️ Descrizione mancante")
@@ -68,16 +83,14 @@ async def fetch_news():
                 description = await desc_el.inner_text()
                 #print(f"📝 Descrizione trovata: {description}")
 
-            # Immagine corretta
+            # Immagine 
             img_el = await block.query_selector("img.img-object-fit-contain")
             if not img_el:
                print("⚠️ Immagine mancante")
             img_src = None
             if img_el:
-                img_src = await img_el.get_attribute("src")
-                #print(f"🖼️ Immagine trovata: {img_src}")
-                if img_src and img_src.startswith("/"):
-                    img_src = "https://www.comune.orgiano.vi.it" + img_src
+               raw_img_src = await img_el.get_attribute("src")
+               img_src = normalize_url(raw_img_src, "https://www.comune.orgiano.vi.it")
 
             ####################################
 

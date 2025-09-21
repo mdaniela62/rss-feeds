@@ -1,5 +1,5 @@
 ###  Sostituisci villaverla con il nome del Comune ###
-###  Comune di villaverla  ##################à
+###  Comune di villaverla
 
 import asyncio
 from playwright.async_api import async_playwright
@@ -9,6 +9,42 @@ import io
 
 FEED_FILE = "feeds/villaverla.xml"
 URL = "https://www.comune.villaverla.vi.it/Novita"
+
+from urllib.parse import urljoin
+
+def normalize_url(raw_url, base_url):
+    if not raw_url:
+        return None
+    raw_url = raw_url.strip()
+
+    if raw_url.startswith("http://") or raw_url.startswith("https://"):
+        return raw_url
+
+    if "municipiumapp.it" in raw_url or "cloudfront.net" in raw_url:
+        return "https://" + raw_url.lstrip("/")
+
+    return urljoin(base_url + "/", raw_url.lstrip("/"))
+
+
+async def find_image(block, base_url):
+    # Prova i selettori più comuni
+    selectors = [
+        "img.img-fluid",
+        "img.img-responsive",
+        "img.img-object-fit-contain",
+        "img"  # fallback generico
+    ]
+
+    for selector in selectors:
+        img_el = await block.query_selector(selector)
+        if img_el:
+            raw_src = await img_el.get_attribute("src")
+            if raw_src:
+                return normalize_url(raw_src, base_url)
+
+    print("⚠️ Nessuna immagine trovata nel blocco")
+    return None
+
 
 async def fetch_news():
     async with async_playwright() as p:
@@ -57,20 +93,15 @@ async def fetch_news():
                     pub_date = datetime.now()
 
             # Descrizione corretta
-            desc_el = await block.query_selector("div.card-text.pb-3.d-none.d-none.d-md-block div")
+            desc_el = await block.query_selector("div.card-text")
             description = ""
             if desc_el:
                 description = await desc_el.inner_text()
                 #print(f"📝 Descrizione trovata: {description}")
 
             # Immagine corretta
-            img_el = await block.query_selector("img.img-responsive")
-            img_src = None
-            if img_el:
-                img_src = await img_el.get_attribute("src")
-                #print(f"🖼️ Immagine trovata: {img_src}")
-                if img_src and img_src.startswith("/"):
-                    img_src = "https://www.comune.villaverla.vi.it" + img_src
+            # Immagine 
+            img_src = await find_image(block, "https://www.comune.villaverla.vi.it")
 
             ####################################
 
