@@ -1,10 +1,16 @@
 [
 
   {
+    "name": "Comune di cassola",    
+    "script": "nanto",
+    "url": "https://www.comune.cassola.vi.it/it/home/novita",
+    "output": "feeds/cassola.xml"
+  },
+  {
     "name": "Comune di nanto",    
     "script": "nanto",
     "url": "https://www.comune.nanto.vi.it/it/home/novita",
-    "output": "feeds/orgiano.xml"
+    "output": "feeds/nanto.xml"
   },
   {
     "name": "Comune di Orgiano",    

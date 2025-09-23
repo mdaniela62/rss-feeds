@@ -1,5 +1,5 @@
-### Comune di monteviale ###
-### Sostituisci "monteviale" con il nome del Comune ###
+### Comune di cassola ###
+### Sostituisci "cassola" con il nome del Comune ###
 
 import asyncio
 from datetime import datetime
@@ -9,7 +9,7 @@ import io
 from playwright.async_api import async_playwright
 
 # 🔧 CONFIGURAZIONE
-COMUNE = "monteviale"
+COMUNE = "cassola"
 BASE_URL = f"https://www.comune.{COMUNE}.vi.it"
 FEED_FILE = f"feeds/{COMUNE}.xml"
 SOURCE_URL = f"{BASE_URL}/home/novita"
@@ -78,7 +78,7 @@ async def fetch_news():
         await page.wait_for_load_state('networkidle')
         await asyncio.sleep(2)
 
-        blocks = await page.query_selector_all("div.col-md-6.col-xl-4.mb-4")
+        blocks = await page.query_selector_all("div.col-lg-6.col-xl-4")
         print(f"🔢 Trovati {len(blocks)} blocchi")
         news_items = []
 
