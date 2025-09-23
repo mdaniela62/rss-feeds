@@ -2,7 +2,7 @@
 
   {
     "name": "Comune di cassola",    
-    "script": "nanto",
+    "script": "cassola",
     "url": "https://www.comune.cassola.vi.it/it/home/novita",
     "output": "feeds/cassola.xml"
   },
