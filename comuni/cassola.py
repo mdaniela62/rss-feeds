@@ -78,7 +78,7 @@ async def fetch_news():
         await page.wait_for_load_state('networkidle')
         await asyncio.sleep(2)
 
-        blocks = await page.query_selector_all("div.col-lg-6.col-xl-4")
+        blocks = await page.query_selector_all("div.col-md-6.col-xl-4")
         print(f"🔢 Trovati {len(blocks)} blocchi")
         news_items = []
 
