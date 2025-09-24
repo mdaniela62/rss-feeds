@@ -1,77 +1,151 @@
-from playwright.sync_api import sync_playwright
+### Comune di schio ###
+### Sostituisci "schio" con il nome del Comune ###
+
+import asyncio
 from datetime import datetime
+from urllib.parse import urljoin
 import xml.etree.ElementTree as ET
-import os
+import io
+from playwright.async_api import async_playwright
 
-SITE_INFO = {
-    "name": "Comune di Schio",
-    "url": "https://www.comune.schio.vi.it/Novita",
-    "output": "feeds/schio.xml"
-}
+# 🔧 CONFIGURAZIONE
+COMUNE = "schio"
+BASE_URL = f"https://www.comune.{COMUNE}.vi.it"
+FEED_FILE = f"feeds/{COMUNE}.xml"
+SOURCE_URL = f"{BASE_URL}/Novita"
 
-def get_items():
-    print(" Inizio generazione feed per Comune di Schio")
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
-        page.goto(SITE_INFO["url"], timeout=60000)
+# 🔧 FUNZIONI DI SUPPORTO
 
-        # Accetta cookies se presenti
-        try:
-            page.click("button:has-text('Accetta')", timeout=5000)
-           # print("[OK] Cookies accettati")
-        except:
-            #print("[INFO] Nessun banner cookies trovato")
-            pass
-        page.wait_for_timeout(3000)
+def normalize_url(raw_url, base_url):
+    if not raw_url:
+        return None
+    raw_url = raw_url.strip()
 
-        items = []
-        cards = page.query_selector_all("div.card.card-teaser")
-        print(f"Trovati {len(cards)} articoli.")
+    if raw_url.startswith("http://") or raw_url.startswith("https://"):
+        return raw_url
+    if "municipiumapp.it" in raw_url or "cloudfront.net" in raw_url:
+        return "https://" + raw_url.lstrip("/")
 
-        for card in cards:
-            title_elem = card.query_selector("h3.card-title")
-            link_elem = card.query_selector("a.read-more")
-            date_elem = card.query_selector("div:has-text('Data di pubblicazione')")
+    return urljoin(base_url + "/", raw_url.lstrip("/"))
 
-            title = title_elem.inner_text().strip() if title_elem else "Senza titolo"
-            link = link_elem.get_attribute("href") if link_elem else SITE_INFO["url"]
-            date_str = date_elem.inner_text().replace("Data di pubblicazione:", "").strip() if date_elem else ""
+async def find_image(block, base_url):
+    selectors = [
+        "img.img-fluid",
+        "img.img-responsive",
+        "img.img-object-fit-contain",
+        "img"
+    ]
+    for selector in selectors:
+        img_el = await block.query_selector(selector)
+        if img_el:
+            raw_src = await img_el.get_attribute("src")
+            if raw_src:
+                return normalize_url(raw_src, base_url)
+    print("⚠️ Nessuna immagine trovata nel blocco")
+    return None
+
+async def find_description(block):
+    selectors = [
+        "p.card-text div",
+        "p.card-text",
+        "div.card-body",
+        "div.text",
+        "p",
+        "div"
+    ]
+    for selector in selectors:
+        el = await block.query_selector(selector)
+        if el:
+            text = await el.inner_text()
+            if text.strip():
+                return text.strip()
+    print("⚠️ Nessuna descrizione trovata")
+    return ""
+
+# 🔍 ESTRAZIONE DATI
+
+async def fetch_news():
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                       "AppleWebKit/537.36 (KHTML, like Gecko) "
+                       "Chrome/128.0.0.0 Safari/537.36",
+            viewport={"width": 1366, "height": 768}
+        )
+        page = await context.new_page()
+        await page.goto(SOURCE_URL, timeout=60000)
+        await page.wait_for_load_state('networkidle')
+        await asyncio.sleep(2)
+
+        blocks = await page.query_selector_all("div.card.card-teaser")
+        print(f"🔢 Trovati {len(blocks)} blocchi")
+        news_items = []
+
+        for block in blocks[:10]:
+            title_el = await block.query_selector("h3")
+            date_el = await block.query_selector("span.fw-normal")
+            link_el = await block.query_selector("a")
+
+            title = (await title_el.inner_text()) if title_el else "Senza titolo"
+            if title.lower() in ["avvisi", "notizie", "comunicati"]:
+                continue
+
+            date_text = (await date_el.inner_text()) if date_el else ""
+            link = (await link_el.get_attribute("href")) if link_el else "#"
+            link = normalize_url(link, BASE_URL)
+
             try:
-                pub_date = datetime.strptime(date_str, "%d/%m/%Y").strftime("%a, %d %b %Y")
+                pub_date = datetime.strptime(date_text, "%d %b %Y") if date_text else datetime.now()
             except:
-                pub_date = datetime.now().strftime("%a, %d %b %Y")
+                pub_date = datetime.now()
 
-            items.append({
-                "title": title,
-                "link": link,
-                "pubDate": pub_date
+            description = await find_description(block)
+            img_src = await find_image(block, BASE_URL)
+
+            news_items.append({
+                "title": title.strip(),
+                "link": link.strip(),
+                "date": pub_date,
+                "description": description.strip(),
+                "image": img_src
             })
 
-        browser.close()
-        return items
+        await browser.close()
+        return news_items
 
-def generate_feed(site=None):  #l'argomento era vuoto
-    items = get_items()
+# 📰 GENERAZIONE RSS
+
+def generate_feed():
+    news_items = asyncio.run(fetch_news())
 
     rss = ET.Element("rss", version="2.0")
     channel = ET.SubElement(rss, "channel")
 
-    ET.SubElement(channel, "title").text = SITE_INFO["name"]
-    ET.SubElement(channel, "link").text = SITE_INFO["url"]
-    ET.SubElement(channel, "description").text = f"Ultime notizie da {SITE_INFO['name']}"
-    ET.SubElement(channel, "lastBuildDate").text = datetime.now().strftime("%a, %d %b %Y %H:%M:%S ")
+    ET.SubElement(channel, "title").text = f"Comune di {COMUNE} - Notizie"
+    ET.SubElement(channel, "link").text = SOURCE_URL
+    ET.SubElement(channel, "description").text = f"Ultime notizie dal sito ufficiale del Comune di {COMUNE}"
+    ET.SubElement(channel, "language").text = "it"
 
-    for item in items:
-        item_elem = ET.SubElement(channel, "item")
-        ET.SubElement(item_elem, "title").text = item["title"]
-        ET.SubElement(item_elem, "link").text = item["link"]
-        ET.SubElement(item_elem, "pubDate").text = item["pubDate"]
+    for item in news_items:
+        entry = ET.SubElement(channel, "item")
+        ET.SubElement(entry, "title").text = item["title"]
+        ET.SubElement(entry, "link").text = item["link"]
+        ET.SubElement(entry, "pubDate").text = item["date"].strftime("%a, %d %b %Y %H:%M:%S GMT")
 
-    os.makedirs(os.path.dirname(SITE_INFO["output"]), exist_ok=True)
+        desc_text = item.get("description", "")
+        img_tag = f'<img src="{item["image"]}" alt="immagine" style="max-width:100%;"/><br/>' if item.get("image") else ""
+        ET.SubElement(entry, "description").text = img_tag + desc_text
+
     tree = ET.ElementTree(rss)
-    tree.write(SITE_INFO["output"], encoding="utf-8", xml_declaration=True)
-    print(f"[OK] Feed generato: {SITE_INFO['output']}")
+    tree.write(FEED_FILE, encoding="utf-8", xml_declaration=True)
+
+    output = io.BytesIO()
+    tree.write(output, encoding="utf-8", xml_declaration=True)
+    return output.getvalue().decode("utf-8")
+
+# 🚀 AVVIO SCRIPT
 
 if __name__ == "__main__":
-    generate_feed()
+    content = generate_feed()
+    print(f"✅ Feed generato con {content.count('<item>')} notizie (max 10).")
