@@ -1,6 +1,12 @@
 [
 
   {
+    "name": "Comune di Monte di Malo",    
+    "script": "montedimalo",
+    "url": "https://www.comune.montedimalovi.it/it/home/novita",
+    "output": "feeds/montedimalo.xml"
+  },
+  {
     "name": "Comune di cassola",    
     "script": "cassola",
     "url": "https://www.comune.cassola.vi.it/it/home/novita",
