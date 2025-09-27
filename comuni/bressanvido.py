@@ -60,7 +60,7 @@ async def fetch_news():
 
             # Immagine corretta
             img_el = await block.query_selector("img.card-image-style")
-            print(f"🖼️ Immagine trovata: {img_el}")
+            #print(f"🖼️ Immagine trovata: {img_el}")
             img_src = None
             if img_el:
                 img_src = await img_el.get_attribute("src")
