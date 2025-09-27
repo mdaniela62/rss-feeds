@@ -57,7 +57,7 @@ async def fetch_news():
 
             # Immagine corretta
             
-            img_el = await block.query_selector("img.img-fluid, img.img-responsive")
+            img_el = await block.query_selector("img.rounded-top.img-fluid")
 
             img_src = None
             if img_el:

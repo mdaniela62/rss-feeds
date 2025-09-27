@@ -33,6 +33,7 @@ async def find_image(block, base_url):
         "img.img-fluid",
         "img.img-responsive",
         "img.img-object-fit-contain",
+        "img.rounded-top.img-fluid",
         "img"
     ]
     for selector in selectors:
@@ -51,6 +52,8 @@ async def find_description(block):
         "div.card-body",
         "div.text",
         "p",
+        "a",
+        "h3",
         "div"
     ]
     for selector in selectors:
