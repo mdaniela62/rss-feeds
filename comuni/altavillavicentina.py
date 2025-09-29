@@ -47,6 +47,7 @@ async def find_image(block, base_url):
 async def find_description(block):
     selectors = [
         "p.card-text div",
+        "p.text",
         "p.card-text",
         "div.card-body",
         "div.text",
@@ -85,7 +86,7 @@ async def fetch_news():
         for block in blocks[:10]:
             title_el = await block.query_selector("p.card-title")
             date_el = await block.query_selector("span.fw-normal")
-            link_el = await block.query_selector("p.text-paragraph")
+            link_el = await block.query_selector("a.read-more")
 
             title = (await title_el.inner_text()) if title_el else "Senza titolo"
             if title.lower() in ["avvisi", "notizie", "comunicati"]:
