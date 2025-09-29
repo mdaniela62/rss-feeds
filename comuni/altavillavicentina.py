@@ -47,7 +47,7 @@ async def find_image(block, base_url):
 async def find_description(block):
     selectors = [
         "p.card-text div",
-        "p.text",
+        "p.text.paragraph-card",
         "p.card-text",
         "div.card-body",
         "div.text",
@@ -79,7 +79,7 @@ async def fetch_news():
         await page.wait_for_load_state('networkidle')
         await asyncio.sleep(2)
 
-        blocks = await page.query_selector_all("div.card-teaser")
+        blocks = await page.query_selector_all("div.card-teaser.no-after.rounded.shadow-sm.mb-0")
         print(f"🔢 Trovati {len(blocks)} blocchi")
         news_items = []
 
