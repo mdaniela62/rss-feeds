@@ -1,19 +1,43 @@
 [
 
   {
+    "name": "Comune di Altavilla Vicentina",    
+    "script": "altavillavicentina",
+    "url": "https://www.comune.altavillavicentina.vi.it",
+    "output": "feeds/altavillavicentina.xml"
+  },
+  {
+    "name": "Regione Veneto",    
+    "script": "regioneveneto",
+    "url": "https://www.regioneveneto.it/web/guest",
+    "output": "feeds/veneto.xml"
+  },
+  {
+    "name": "Provincia di Vicenza news",    
+    "script": "provinciavicenza",
+    "url": "https://www.provincia.vicenza.it",
+    "output": "feeds/provinciavicenza.xml"
+  },
+  {
+    "name": "Provincia di Vicenza avvisi",    
+    "script": "provinciavicenza1",
+    "url": "https://www.provincia.vicenza.it",
+    "output": "feeds/provinciavicenza1.xml"
+  },
+  {
     "name": "Comune di Monte di Malo",    
     "script": "montedimalo",
-    "url": "https://www.comune.montedimalovi.it/it/home/novita",
+    "url": "https://www.comune.montedimalo.vi.it/it/home/novita",
     "output": "feeds/montedimalo.xml"
   },
   {
-    "name": "Comune di cassola",    
+    "name": "Comune di Cassola",    
     "script": "cassola",
     "url": "https://www.comune.cassola.vi.it/it/home/novita",
     "output": "feeds/cassola.xml"
   },
   {
-    "name": "Comune di nanto",    
+    "name": "Comune di Nanto",    
     "script": "nanto",
     "url": "https://www.comune.nanto.vi.it/it/home/novita",
     "output": "feeds/nanto.xml"
