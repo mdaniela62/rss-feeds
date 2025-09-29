@@ -10,9 +10,9 @@ from playwright.async_api import async_playwright
 
 # 🔧 CONFIGURAZIONE
 COMUNE = "altavillavicentina"
-BASE_URL = f"https://www.comune.{COMUNE}.vi.it"
+BASE_URL = f"https://www.comune.altavillavicentina.vi.it"
 FEED_FILE = f"feeds/{COMUNE}.xml"
-SOURCE_URL = BASE_URL
+SOURCE_URL =  f"https://www.comune.altavillavicentina.vi.it"
 
 # 🔧 FUNZIONI DI SUPPORTO
 
@@ -47,7 +47,7 @@ async def find_image(block, base_url):
 async def find_description(block):
     selectors = [
         "p.card-text div",
-        "p.text.paragraph-card",
+        "p.text-paragraph-card",
         "p.card-text",
         "div.card-body",
         "div.text",
@@ -75,7 +75,7 @@ async def fetch_news():
             viewport={"width": 1366, "height": 768}
         )
         page = await context.new_page()
-        await page.goto(SOURCE_URL, timeout=60000)
+        await page.goto(BASE_URL, timeout=60000)
         await page.wait_for_load_state('networkidle')
         await asyncio.sleep(2)
 
