@@ -1,82 +1,151 @@
-import requests
-from bs4 import BeautifulSoup
-from feedgen.feed import FeedGenerator
-from datetime import datetime, timezone
-from email.utils import format_datetime
+### Comune di malo ###
+### Sostituisci "malo" con il nome del Comune ###
 
+import asyncio
+from datetime import datetime
+from urllib.parse import urljoin
+import xml.etree.ElementTree as ET
+import io
+from playwright.async_api import async_playwright
 
-def parse_italian_date(date_str):
-    mesi = {
-        "gennaio": 1, "febbraio": 2, "marzo": 3, "aprile": 4, "maggio": 5, "giugno": 6,
-        "luglio": 7, "agosto": 8, "settembre": 9, "ottobre": 10, "novembre": 11, "dicembre": 12
-    }
+# 🔧 CONFIGURAZIONE
+COMUNE = "malo"
+BASE_URL = f"https://www.comune.{COMUNE}.vi.it"
+FEED_FILE = f"feeds/{COMUNE}.xml"
+SOURCE_URL = f"{BASE_URL}/home/novita"
 
-    # Esempio formato: "Ult.agg. 28/05/2025"
-    parts = date_str.replace("Ult.agg.", "").strip().split("/")
-    if len(parts) == 3:
-        giorno = int(parts[0])
-        mese = int(parts[1])
-        anno = int(parts[2])
-        return datetime(anno, mese, giorno, tzinfo=timezone.utc)
-    raise ValueError("Formato data non riconosciuto")
+# 🔧 FUNZIONI DI SUPPORTO
 
+def normalize_url(raw_url, base_url):
+    if not raw_url:
+        return None
+    raw_url = raw_url.strip()
+
+    if raw_url.startswith("http://") or raw_url.startswith("https://"):
+        return raw_url
+    if "municipiumapp.it" in raw_url or "cloudfront.net" in raw_url:
+        return "https://" + raw_url.lstrip("/")
+
+    return urljoin(base_url + "/", raw_url.lstrip("/"))
+
+async def find_image(block, base_url):
+    selectors = [
+        "img.img-fluid",
+        "img.img-responsive",
+        "img.img-object-fit-contain",
+        "img"
+    ]
+    for selector in selectors:
+        img_el = await block.query_selector(selector)
+        if img_el:
+            raw_src = await img_el.get_attribute("src")
+            if raw_src:
+                return normalize_url(raw_src, base_url)
+    print("⚠️ Nessuna immagine trovata nel blocco")
+    return None
+
+async def find_description(block):
+    selectors = [
+        "p.card-text div",
+        "p.card-text",
+        "div.card-body",
+        "div.text",
+        "h3",
+        "div"
+    ]
+    for selector in selectors:
+        el = await block.query_selector(selector)
+        if el:
+            text = await el.inner_text()
+            if text.strip():
+                return text.strip()
+    print("⚠️ Nessuna descrizione trovata")
+    return ""
+
+# 🔍 ESTRAZIONE DATI
+
+async def fetch_news():
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                       "AppleWebKit/537.36 (KHTML, like Gecko) "
+                       "Chrome/128.0.0.0 Safari/537.36",
+            viewport={"width": 1366, "height": 768}
+        )
+        page = await context.new_page()
+        await page.goto(SOURCE_URL, timeout=60000)
+        await page.wait_for_load_state('networkidle')
+        await asyncio.sleep(2)
+
+        blocks = await page.query_selector_all("div.col-md-6.col-xl-4")
+        print(f"🔢 Trovati {len(blocks)} blocchi")
+        news_items = []
+
+        for block in blocks[:10]:
+            title_el = await block.query_selector("h3")
+            date_el = await block.query_selector("span.fw-normal")
+            link_el = await block.query_selector("a")
+
+            title = (await title_el.inner_text()) if title_el else "Senza titolo"
+            if title.lower() in ["avvisi", "notizie", "comunicati"]:
+                continue
+
+            date_text = (await date_el.inner_text()) if date_el else ""
+            link = (await link_el.get_attribute("href")) if link_el else "#"
+            link = normalize_url(link, BASE_URL)
+
+            try:
+                pub_date = datetime.strptime(date_text, "%d %b %Y") if date_text else datetime.now()
+            except:
+                pub_date = datetime.now()
+
+            description = await find_description(block)
+            img_src = await find_image(block, BASE_URL)
+
+            news_items.append({
+                "title": title.strip(),
+                "link": link.strip(),
+                "date": pub_date,
+                "description": description.strip(),
+                "image": img_src
+            })
+
+        await browser.close()
+        return news_items
+
+# 📰 GENERAZIONE RSS
 
 def generate_feed():
-    print(" Inizio generazione feed per Comune di Malo")
-    url = "http://www.comune.malo.vi.it/web/malo"
-    #print(f" Richiesta pagina: {url}", flush=True)
+    news_items = asyncio.run(fetch_news())
 
-    try:
-        response = requests.get(url, timeout=20)
-        response.raise_for_status()
-        #print(" Pagina caricata correttamente", flush=True)
-    except Exception as e:
-        print(f" Errore caricamento pagina: {e}", flush=True)
-        return
+    rss = ET.Element("rss", version="2.0")
+    channel = ET.SubElement(rss, "channel")
 
-    soup = BeautifulSoup(response.content, "lxml")
+    ET.SubElement(channel, "title").text = f"Comune di {COMUNE} - Notizie"
+    ET.SubElement(channel, "link").text = SOURCE_URL
+    ET.SubElement(channel, "description").text = f"Ultime notizie dal sito ufficiale del Comune di {COMUNE}"
+    ET.SubElement(channel, "language").text = "it"
 
-    fg = FeedGenerator()
-    fg.title("Comune di Malo : Notizie")
-    fg.link(href=url, rel="alternate")
-    fg.description("Ultime notizie dal sito ufficiale del Comune di Malo")
+    for item in news_items:
+        entry = ET.SubElement(channel, "item")
+        ET.SubElement(entry, "title").text = item["title"]
+        ET.SubElement(entry, "link").text = item["link"]
+        ET.SubElement(entry, "pubDate").text = item["date"].strftime("%a, %d %b %Y %H:%M:%S GMT")
 
-    items = soup.select("div.contenutoSezioneNews")
-    print(f" Elementi trovati: {len(items)}", flush=True)
+        desc_text = item.get("description", "")
+        img_tag = f'<img src="{item["image"]}" alt="immagine" style="max-width:100%;"/><br/>' if item.get("image") else ""
+        ET.SubElement(entry, "description").text = img_tag + desc_text
 
-    for idx, item in enumerate(items, start=1):
-        title_tag = item.select_one("h3.underline a")
-        link_tag = title_tag
-        date_tag = item.select_one("span.noteNews")
-        subtitle_tag = item.select_one("div.sottotitolo")
+    tree = ET.ElementTree(rss)
+    tree.write(FEED_FILE, encoding="utf-8", xml_declaration=True)
 
-        if title_tag and link_tag:
-            href = link_tag.get("href")
-            if href and not href.startswith("http"):
-                href = requests.compat.urljoin(url, href)
+    output = io.BytesIO()
+    tree.write(output, encoding="utf-8", xml_declaration=True)
+    return output.getvalue().decode("utf-8")
 
-       #     print(f" Articolo: {title_tag.get_text(strip=True)} , {href}", flush=True)
-            fe = fg.add_entry()
-            fe.title(title_tag.get_text(strip=True))
-            fe.link(href=href)
-            fe.guid(href, permalink=True)
-
-            description = subtitle_tag.get_text(strip=True) if subtitle_tag else title_tag.get_text(strip=True)
-            fe.description(description)
-
-            if date_tag:
-                try:
-                    pub_date = parse_italian_date(date_tag.get_text(strip=True))
-                    fe.pubDate(format_datetime(pub_date))
-                except Exception as e:
-                    print(f"     Errore data '{date_tag.get_text(strip=True)}': {e}", flush=True)
-
-    filename = "feeds/malo.xml"
-    with open(filename, "wb") as f:
-        f.write(fg.rss_str(pretty=True))
-
-    print(f" Feed salvato in: {filename}", flush=True)
-
+# 🚀 AVVIO SCRIPT
 
 if __name__ == "__main__":
-    generate_feed()
+    content = generate_feed()
+    print(f"✅ Feed generato con {content.count('<item>')} notizie (max 10).")
