@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 from datetime import datetime
-
+####
 # URL della homepage del Comune di Schiavon
 URL = "https://www.comune.schiavon.vi.it/"
 TIMEOUT = 10
