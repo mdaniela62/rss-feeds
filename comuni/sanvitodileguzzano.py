@@ -1,5 +1,5 @@
-### Comune di breganze ###
-### Sostituisci "breganze" con il nome del Comune ###
+### Comune di sanvitodileguzzano ###
+### Sostituisci "sanvitodileguzzano" con il nome del Comune ###
 
 import asyncio
 from datetime import datetime
@@ -9,10 +9,10 @@ import io
 from playwright.async_api import async_playwright
 
 # 🔧 CONFIGURAZIONE
-COMUNE = "breganze"
+COMUNE = "sanvitodileguzzano"
 BASE_URL = f"https://www.comune.{COMUNE}.vi.it"
 FEED_FILE = f"feeds/{COMUNE}.xml"
-SOURCE_URL = f"{BASE_URL}/home/novita"
+SOURCE_URL = f"{BASE_URL}/Novita"
 
 # 🔧 FUNZIONI DI SUPPORTO
 
@@ -78,7 +78,7 @@ async def fetch_news():
         await page.wait_for_load_state('networkidle')
         await asyncio.sleep(2)
 
-        blocks = await page.query_selector_all("div.row.g-4.novita-elenco div.col-md-6.col-xl-4.mb-4")
+        blocks = await page.query_selector_all("div.px-3.pb-3")
         print(f"🔢 Trovati {len(blocks)} blocchi")
         news_items = []
 
