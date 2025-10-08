@@ -1,3 +1,4 @@
+
 [
 
   {
@@ -26,7 +27,7 @@
   },
   {
     "name": "Comune di Sarego",    
-    "script": "saregoa",
+    "script": "sarego",
     "url": "https://www.comune.sarego.vi.it/novita",
     "output": "feeds/sarego.xml"
   },
@@ -249,8 +250,5 @@
     "output": "feeds/castelgomberto.xml"
   }
 ]
-
-
-
 
 

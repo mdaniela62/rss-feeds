@@ -11,7 +11,7 @@ from playwright.async_api import async_playwright
 # 🔧 CONFIGURAZIONE
 COMUNE = "sanvitodileguzzano"
 BASE_URL = f"https://www.comune.{COMUNE}.vi.it"
-FEED_FILE = f"feeds/{COMUNE}.xml"
+FEED_FILE = f"feeds/sanvito.xml"
 SOURCE_URL = f"{BASE_URL}/Novita"
 
 # 🔧 FUNZIONI DI SUPPORTO
