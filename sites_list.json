@@ -1,6 +1,36 @@
 [
 
   {
+    "name": "Comune di Castegnero",    
+    "script": "castegnero",
+    "url": "https://www.comune.castegnero.vi.it/it/menu/news",
+    "output": "feeds/castegnero.xml"
+  },
+  {
+    "name": "Comune di Arcugnano",    
+    "script": "arcugnano",
+    "url": "https://www.comune.arcugnano.vi.it/home",
+    "output": "feeds/arcugnano.xml"
+  },
+  {
+    "name": "Comune di Rossano Veneto",    
+    "script": "rossano",
+    "url": "https://www.comune.rossano.vi.it/novita",
+    "output": "feeds/rossano.xml"
+  },
+  {
+    "name": "Comune di San Vito di Leguzzano",    
+    "script": "sanvitodileguzzano",
+    "url": "https://www.comune.sanvitodileguzzano.vi.it/Novita",
+    "output": "feeds/sanvitodileguzzao.xml"
+  },
+  {
+    "name": "Comune di Sarego",    
+    "script": "saregoa",
+    "url": "https://www.comune.sarego.vi.it/novita",
+    "output": "feeds/sarego.xml"
+  },
+  {
     "name": "Comune di Altavilla Vicentina",    
     "script": "altavillavicentina",
     "url": "https://www.comune.altavillavicentina.vi.it",
