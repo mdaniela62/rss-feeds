@@ -33,10 +33,12 @@ async def find_image(block, base_url):
         "img.img-fluid",
         "img.img-responsive",
         "img.img-object-fit-contain",
+        "rounded-top",
         "img"
     ]
     for selector in selectors:
         img_el = await block.query_selector(selector)
+        print(img_el)
         if img_el:
             raw_src = await img_el.get_attribute("src")
             if raw_src:
@@ -50,6 +52,7 @@ async def find_description(block):
         "p.card-text",
         "div.card-body",
         "div.text",
+        "titillium",
         "h3",
         "div"
     ]
@@ -78,7 +81,7 @@ async def fetch_news():
         await page.wait_for_load_state('networkidle')
         await asyncio.sleep(2)
 
-        blocks = await page.query_selector_all("div.col-md-6.col-xl-4")
+        blocks = await page.query_selector_all("div.row.g-4 div.col-md-6.col-xl-4")
         print(f"🔢 Trovati {len(blocks)} blocchi")
         news_items = []
 
