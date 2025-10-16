@@ -9,7 +9,7 @@ import io
 from playwright.async_api import async_playwright
 
 # 🔧 CONFIGURAZIONE
-COMUNE = "villaverla "
+COMUNE = "villaverla"
 BASE_URL = f"https://www.comune.{COMUNE}.vi.it"
 FEED_FILE = f"feeds/{COMUNE}.xml"
 SOURCE_URL = f"{BASE_URL}/Novita"
