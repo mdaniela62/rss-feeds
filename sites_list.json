@@ -2,6 +2,30 @@
 [
 
   {
+    "name": "Comune di Cornedo Vicentino",    
+    "script": "cornedo-vicentino",
+    "url": "https://www.comune.cornedo-vicentino.vi.it",
+    "output": "feeds/cornedo-vicentino.xml"
+  },
+  {
+    "name": "Comune di LusianaConco ",    
+    "script": "lusianaconco",
+    "url": "https://www.comune.lusianaconco.vi.it",
+    "output": "feeds/lusianaconco.xml"
+  },
+  {
+    "name": "Comune di Nogarole Vicentino",    
+    "script": "nogarolevicentino",
+    "url": "https://www.comune.nogarolevicentino.vi.it",
+    "output": "feeds/nogarolevicentino.xml"
+  },
+  {
+    "name": "Comune di Salcedo",    
+    "script": "salcedo",
+    "url": "https://www.comune.salcedo.vi.it/novita",
+    "output": "feeds/salcedo.xml"
+  },
+  {
     "name": "Comune di Castegnero",    
     "script": "castegnero",
     "url": "https://www.comune.castegnero.vi.it/it/menu/news",
