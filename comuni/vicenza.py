@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 import io
 
 FEED_FILE = "feeds/vicenza.xml"
-URL = "https://www.comune.vicenza.it/Novita"
+URL = "https://www.comune.vicenza.it"
 
 async def fetch_news():
     async with async_playwright() as p:
@@ -24,7 +24,7 @@ async def fetch_news():
         await page.wait_for_load_state('networkidle') 
         await asyncio.sleep(2)
 
-        blocks = await page.query_selector_all("div.px-3.pb-3")
+        blocks = await page.query_selector_all("div.card-image-wrapper")
         print(f"🔢 Trovati {len(blocks)} blocchi")
         news_items = []
 
@@ -39,7 +39,7 @@ async def fetch_news():
 
             title = (await title_el.inner_text()) if title_el else "Senza titolo"
 
-            if title.lower() in ["avvisi", "notizie", "comunicati"]:
+            if title.lower() in ["avvisi", "notizie", "comunicati", "giunta comunale", "consiglio comunale"]:
                 #print(f" Escluso: {title}\n")
                 continue
             
@@ -57,14 +57,14 @@ async def fetch_news():
                     pub_date = datetime.now()
 
             # Descrizione corretta
-            desc_el = await block.query_selector("div.card-text div")
+            desc_el = await block.query_selector("p.mt-1")
             description = ""
             if desc_el:
                 description = await desc_el.inner_text()
                 #print(f"📝 Descrizione trovata: {description}")
 
             # Immagine corretta
-            img_el = await block.query_selector("img.img-responsive")
+            img_el = await block.query_selector("img.img-fluid")
             img_src = None
             if img_el:
                 img_src = await img_el.get_attribute("src")

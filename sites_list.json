@@ -2,6 +2,30 @@
 [
 
   {
+    "name": "Comune di Chiampo",    
+    "script": "chiampo",
+    "url": "https://www.comune.chiampo.vi.it/it/novita",
+    "output": "feeds/chiampo.xml"
+  },
+  {
+    "name": "Comune di Montecchio Precalcino",    
+    "script": "cornedo-vicentino",
+    "url": "https://www.comune.montecchioprecalcino.vi.it",
+    "output": "feeds/montecchioprecalcino.xml"
+  },
+  {
+    "name": "Comune di Zovencedo",    
+    "script": "zovencedo",
+    "url": "https://www.comune.zovencedo.vi.it/novita",
+    "output": "feeds/zovencedo.xml"
+  },
+  {
+    "name": "Comune di Cornedo Vicentino",    
+    "script": "cornedo-vicentino",
+    "url": "https://www.comune.cornedo-vicentino.vi.it",
+    "output": "feeds/cornedo-vicentino.xml"
+  },
+  {
     "name": "Comune di Cornedo Vicentino",    
     "script": "cornedo-vicentino",
     "url": "https://www.comune.cornedo-vicentino.vi.it",
