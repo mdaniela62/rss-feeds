@@ -32,6 +32,7 @@ async def find_image(block, base_url):
     selectors = [
         "img.img-fluid",
         "img.img-responsive",
+        "img.img-fluid.rounded-top.img-responsive",
         "img.img-object-fit-contain",
         "img"
     ]
