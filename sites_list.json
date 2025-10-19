@@ -2,6 +2,24 @@
 [
 
   {
+    "name": "Comune di Longare",    
+    "script": "longare",
+    "url": "https://www.comune.longare.vi.it/it/novita",
+    "output": "feeds/longare.xml"
+  },
+  {
+    "name": "Comune di Pove del Grappa",    
+    "script": "pove",
+    "url": "https://www.comune.pove.vi.it/it/novita",
+    "output": "feeds/pove.xml"
+  },
+  {
+    "name": "Comune di Pozzoleone",    
+    "script": "pozzoleone",
+    "url": "https://www.comune.pozzoleone.vi.it/it/novita",
+    "output": "feeds/pozzoleone.xml"
+  },
+  {
     "name": "Comune di Chiampo",    
     "script": "chiampo",
     "url": "https://www.comune.chiampo.vi.it/it/novita",
@@ -9,7 +27,7 @@
   },
   {
     "name": "Comune di Montecchio Precalcino",    
-    "script": "cornedo-vicentino",
+    "script": "montecchioprecalcino",
     "url": "https://www.comune.montecchioprecalcino.vi.it",
     "output": "feeds/montecchioprecalcino.xml"
   },

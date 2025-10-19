@@ -41,7 +41,7 @@ async def find_image(block, base_url):
             raw_src = await img_el.get_attribute("src")
             if raw_src:
                 return normalize_url(raw_src, base_url)
-    print("⚠️ Nessuna immagine trovata nel blocco")
+    #print("⚠️ Nessuna immagine trovata nel blocco")
     return None
 
 async def find_description(block):
@@ -59,7 +59,7 @@ async def find_description(block):
     #        text = await el.inner_text()
     #        if text.strip():
     #            return text.strip()
-        print("⚠️ Nessuna descrizione trovata")
+       # print("⚠️ Nessuna descrizione trovata")
     return ""
 
 # 🔍 ESTRAZIONE DATI

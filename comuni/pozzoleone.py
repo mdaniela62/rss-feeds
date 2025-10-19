@@ -1,5 +1,5 @@
-### Comune di thiene ###
-### Sostituisci "thiene" con il nome del Comune ###
+### Comune di pozzoleone###
+### Sostituisci "pozzoleone" con il nome del Comune ###
 
 import asyncio
 from datetime import datetime
@@ -9,10 +9,10 @@ import io
 from playwright.async_api import async_playwright
 
 # 🔧 CONFIGURAZIONE
-COMUNE = "thiene"
+COMUNE = "pozzoleone"
 BASE_URL = f"https://www.comune.{COMUNE}.vi.it"
 FEED_FILE = f"feeds/{COMUNE}.xml"
-SOURCE_URL = f"{BASE_URL}/home/novita"
+SOURCE_URL = f"{BASE_URL}"
 
 # 🔧 FUNZIONI DI SUPPORTO
 
@@ -32,13 +32,12 @@ async def find_image(block, base_url):
     selectors = [
         "img.img-fluid",
         "img.img-responsive",
+        "div.card-image",
         "img.img-object-fit-contain",
-        "rounded-top",
         "img"
     ]
     for selector in selectors:
         img_el = await block.query_selector(selector)
-        #print(img_el)
         if img_el:
             raw_src = await img_el.get_attribute("src")
             if raw_src:
@@ -50,9 +49,9 @@ async def find_description(block):
     selectors = [
         "p.card-text div",
         "p.card-text",
+        "p.text-paragraph-card",
         "div.card-body",
         "div.text",
-        "p.titillium",
         "h3",
         "div"
     ]
@@ -81,12 +80,12 @@ async def fetch_news():
         await page.wait_for_load_state('networkidle')
         await asyncio.sleep(2)
 
-        blocks = await page.query_selector_all("div.row.g-4 div.col-md-6.col-xl-4")
+        blocks = await page.query_selector_all("div.card.card-teaser.card-teaser-image")
         print(f"🔢 Trovati {len(blocks)} blocchi")
         news_items = []
 
         for block in blocks[:10]:
-            title_el = await block.query_selector("h3")
+            title_el = await block.query_selector("p.card-title")
             date_el = await block.query_selector("span.fw-normal")
             link_el = await block.query_selector("a")
 
