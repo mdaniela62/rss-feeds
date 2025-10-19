@@ -44,12 +44,6 @@
     "output": "feeds/cornedo-vicentino.xml"
   },
   {
-    "name": "Comune di Cornedo Vicentino",    
-    "script": "cornedo-vicentino",
-    "url": "https://www.comune.cornedo-vicentino.vi.it",
-    "output": "feeds/cornedo-vicentino.xml"
-  },
-  {
     "name": "Comune di LusianaConco ",    
     "script": "lusianaconco",
     "url": "https://www.comune.lusianaconco.vi.it",
@@ -115,13 +109,7 @@
     "url": "https://www.provincia.vicenza.it",
     "output": "feeds/provinciavicenza.xml"
   },
-  {
-    "name": "Provincia di Vicenza avvisi",    
-    "script": "provinciavicenza1",
-    "url": "https://www.provincia.vicenza.it",
-    "output": "feeds/provinciavicenza1.xml"
-  },
-  {
+    {
     "name": "Comune di Monte di Malo",    
     "script": "montedimalo",
     "url": "https://www.comune.montedimalo.vi.it/it/home/novita",

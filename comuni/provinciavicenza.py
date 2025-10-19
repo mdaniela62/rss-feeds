@@ -33,6 +33,7 @@ async def find_image(block, base_url):
         "img.img-fluid",
         "img.img-responsive",
         "img.img-object-fit-contain",
+        "a.itemImage",
         "img"
     ]
     for selector in selectors:
@@ -54,11 +55,11 @@ async def find_description(block):
         "div"
     ]
     for selector in selectors:
-    #    el = await block.query_selector(selector)
-    #    if el:
-    #        text = await el.inner_text()
-    #        if text.strip():
-    #            return text.strip()
+         el = await block.query_selector(selector)
+         if el:
+             text = await el.inner_text()
+             if text.strip():
+                 return text.strip()
        # print("⚠️ Nessuna descrizione trovata")
     return ""
 
@@ -122,9 +123,9 @@ def generate_feed():
     rss = ET.Element("rss", version="2.0")
     channel = ET.SubElement(rss, "channel")
 
-    ET.SubElement(channel, "title").text = f"Comune di {COMUNE} - Notizie"
+    ET.SubElement(channel, "title").text = f"Provincia di {COMUNE} - Notizie"
     ET.SubElement(channel, "link").text = SOURCE_URL
-    ET.SubElement(channel, "description").text = f"Ultime notizie dal sito ufficiale del Comune di {COMUNE}"
+    ET.SubElement(channel, "description").text = f"Ultime notizie dal sito ufficiale della Provincia di {COMUNE}"
     ET.SubElement(channel, "language").text = "it"
 
     for item in news_items:
