@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 import io
 
 FEED_FILE = "feeds/vicenza.xml"
-URL = "https://www.comune.vicenza.it"
+URL = "https://www.comune.vicenza.it/Novita"
 
 async def fetch_news():
     async with async_playwright() as p:
@@ -24,7 +24,7 @@ async def fetch_news():
         await page.wait_for_load_state('networkidle') 
         await asyncio.sleep(2)
 
-        blocks = await page.query_selector_all("div.card-image-wrapper")
+        blocks = await page.query_selector_all("div.px-3.pb-3")
         print(f"🔢 Trovati {len(blocks)} blocchi")
         news_items = []
 
@@ -57,7 +57,7 @@ async def fetch_news():
                     pub_date = datetime.now()
 
             # Descrizione corretta
-            desc_el = await block.query_selector("p.mt-1")
+            desc_el = await block.query_selector("div.card-text.pb-3.d-none.d-md-block")
             description = ""
             if desc_el:
                 description = await desc_el.inner_text()
