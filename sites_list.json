@@ -234,7 +234,7 @@
   {
     "name": "Comune di Arzignano",
     "script": "arzignano",
-    "url": "https://www.comune.arzignano.vi.it/home/novita.html",
+    "url": "https://www.comune.arzignano.vi.it/home.html",
     "output": "feeds/arzignano.xml"
   },
   {

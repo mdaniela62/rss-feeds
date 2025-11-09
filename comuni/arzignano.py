@@ -12,7 +12,7 @@ from playwright.async_api import async_playwright
 COMUNE = "arzignano"
 BASE_URL = f"https://www.comune.{COMUNE}.vi.it"
 FEED_FILE = f"feeds/{COMUNE}.xml"
-SOURCE_URL = f"{BASE_URL}/home/novita"
+SOURCE_URL = f"{BASE_URL}/home.html"
 
 # 🔧 FUNZIONI DI SUPPORTO
 
@@ -78,17 +78,18 @@ async def fetch_news():
         await page.wait_for_load_state('networkidle')
         await asyncio.sleep(2)
 
-        blocks = await page.query_selector_all("div.col-md-6.col-xl-4")
+        #blocks = await page.query_selector_all("div.card.card-img.card-teaser", "div.col-12.col-md-3.col-lg-3")
+        blocks = await page.query_selector_all("div.card.card-img.no-after")
         print(f"🔢 Trovati {len(blocks)} blocchi")
         news_items = []
 
-        for block in blocks[:10]:
+        for block in blocks[:16]:
             title_el = await block.query_selector("h3")
             date_el = await block.query_selector("span.fw-normal")
             link_el = await block.query_selector("a")
 
             title = (await title_el.inner_text()) if title_el else "Senza titolo"
-            if title.lower() in ["avvisi", "notizie", "comunicati"]:
+            if title.lower() in ["avvisi", "notizie", "comunicati", "area gestione del territorio", "lavori pubblici", "sociale e famiglia", "sicurezza", "sport", "commercio", "ambiente e paesaggio", "tributi" ]:
                 continue
 
             date_text = (await date_el.inner_text()) if date_el else ""
@@ -148,4 +149,4 @@ def generate_feed():
 
 if __name__ == "__main__":
     content = generate_feed()
-    print(f"✅ Feed generato con {content.count('<item>')} notizie (max 10).")
+    print(f"✅ Feed generato con {content.count('<item>')} notizie (max 16).")
