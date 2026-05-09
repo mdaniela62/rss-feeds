@@ -152,6 +152,12 @@
     "output": "feeds/vicenza.xml"
   },
   {
+    "name": "Comune di Vicenza",    
+    "script": "vicenza2",
+    "url": "https://www.comune.vicenza.it/Servizi",
+    "output": "feeds/vicenza2.xml"
+  },
+  {
     "name": "Comune di Villaga",
     "script": "villaga",
     "url": "https://www.comune.villaga.vi.it/novita",
